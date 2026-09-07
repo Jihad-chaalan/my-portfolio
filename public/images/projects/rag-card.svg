@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#012F25"/>
+  <g opacity="0.5" stroke="#FAF2A0" stroke-width="2">
+    <line x1="80" y1="120" x2="420" y2="120"/>
+    <line x1="80" y1="120" x2="80" y2="400"/>
+    <line x1="420" y1="120" x2="420" y2="400"/>
+    <line x1="80" y1="400" x2="420" y2="400"/>
+    <line x1="600" y1="220" x2="900" y2="220"/>
+    <line x1="600" y1="220" x2="600" y2="480"/>
+    <line x1="900" y1="220" x2="900" y2="480"/>
+    <line x1="600" y1="480" x2="900" y2="480"/>
+    <line x1="420" y1="260" x2="600" y2="350"/>
+  </g>
+  <circle cx="80" cy="120" r="10" fill="#FC7D14"/>
+  <circle cx="420" cy="400" r="10" fill="#FC7D14"/>
+  <circle cx="900" cy="220" r="10" fill="#FAF2A0"/>
+  <circle cx="600" cy="480" r="10" fill="#FAF2A0"/>
+  <text x="80" y="650" font-family="Arial, sans-serif" font-size="56" font-weight="700" fill="#FAF2A0">Secure Multi-Tenant RAG</text>
+  <text x="80" y="700" font-family="Arial, sans-serif" font-size="24" fill="#FFFFFF" opacity="0.75">Hybrid Search &#183; RBAC &#183; AI Firewall</text>
+</svg>

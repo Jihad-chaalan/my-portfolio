@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens — see docs/DESIGN.md for the full rationale.
+ * Palette is intentionally fixed to four colors. Do not add new
+ * colors here unless required for accessibility states.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-canvas: #faf2a0; /* Background Yellow */
+  --color-forest: #012f25; /* Forest Green */
+  --color-orange: #fc7d14; /* Orange Accent */
+  --color-surface: #ffffff; /* White */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--color-canvas);
+  --color-forest: var(--color-forest);
+  --color-orange: var(--color-orange);
+  --color-surface: var(--color-surface);
+
+  /* Manrope — body copy, nav, buttons, all readable content */
+  --font-sans: var(--font-manrope);
+  /* Shrikhand — personal branding / name only */
+  --font-brand: var(--font-shrikhand);
+  /* Bungee — project names, skill-card headings, small display headings */
+  --font-sub: var(--font-bungee);
+  /* Display stand-in for the licensed Bowlby One SC — hero + section headings */
+  --font-display: var(--font-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-forest);
 }
+
+/* Consistent, visible keyboard focus state across the site */
+:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--color-orange);
+  color: var(--color-surface);
+}
+

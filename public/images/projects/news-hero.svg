@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#FC7D14"/>
+  <g opacity="0.5" stroke="#012F25" stroke-width="3">
+    <rect x="120" y="160" width="1360" height="70"/>
+    <rect x="120" y="280" width="880" height="46"/>
+    <rect x="120" y="360" width="1060" height="46"/>
+    <rect x="120" y="440" width="680" height="46"/>
+  </g>
+  <circle cx="1300" cy="600" r="110" fill="#012F25"/>
+  <path d="M1250 600 l30 30 l70 -70" stroke="#FAF2A0" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="120" y="760" font-family="Arial, sans-serif" font-size="72" font-weight="700" fill="#012F25">AI Daily News</text>
+  <text x="120" y="815" font-family="Arial, sans-serif" font-size="28" fill="#012F25" opacity="0.8">An autonomous AI agent system, not just a news website</text>
+</svg>
