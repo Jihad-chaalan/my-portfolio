@@ -26,7 +26,7 @@ export function Hero() {
       <section
         id="about"
         aria-labelledby="hero-title"
-        className="grid gap-10 px-5 pt-22 pb-12 sm:px-10 sm:pt-26 sm:pb-16 lg:flex-1 lg:grid-cols-2 lg:items-stretch lg:gap-12 lg:px-14 lg:py-12"
+        className="grid gap-10 px-5 pt-22 pb-12 sm:px-10 sm:pt-26 sm:pb-16 lg:flex-1 lg:grid-cols-2 lg:items-stretch lg:gap-12 lg:px-14 lg:pt-24 lg:pb-12"
       >
         {/* Photo — fills the left column's full height on desktop; crop is
             anchored slightly above center so the face stays in frame. */}
@@ -37,7 +37,7 @@ export function Hero() {
             fill
             unoptimized
             priority
-            className="object-cover object-[50%_30%]"
+            className="object-cover object-[50%_15%]"
             sizes="(max-width: 640px) 100vw, 50vw"
           />
         </div>
