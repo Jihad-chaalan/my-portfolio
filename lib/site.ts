@@ -17,10 +17,14 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/in/jihadchaalan",
     bookACall: "https://cal.com/jihadchaalan",
   },
+  portrait: {
+    src: "/images/portrait.png",
+    alt: "Portrait of Jihad Chaalan",
+  },
 } as const;
 
 export const navLinks = [
-  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },

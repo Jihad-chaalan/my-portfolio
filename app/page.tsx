@@ -1,22 +1,20 @@
+import { Hero } from "@/components/sections/Hero";
+import { Skills } from "@/components/sections/Skills";
+import { Projects } from "@/components/sections/Projects";
+import { Contact } from "@/components/sections/Contact";
+
+/**
+ * Homepage — a single scrolling page in the exact required order:
+ * Hero → Skills → Projects → Contact, with semantic section IDs
+ * (#home #skills #projects #contact).
+ */
 export default function Home() {
   return (
     <main id="main-content">
-      <section
-        id="home"
-        aria-label="Introduction"
-        className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center"
-      >
-        <p className="font-brand text-3xl text-forest sm:text-4xl">
-          Jihad Chaalan
-        </p>
-        <h1 className="mt-4 font-display text-4xl uppercase leading-tight text-forest sm:text-6xl">
-          Full-Stack AI Engineer
-        </h1>
-        <p className="mt-6 max-w-2xl text-base text-forest/80 sm:text-lg">
-          Homepage sections (Hero, Skills, Projects, Contact) are implemented
-          task by task. This is the Task 1 foundation checkpoint.
-        </p>
-      </section>
+      <Hero />
+      <Skills />
+      <Projects />
+      <Contact />
     </main>
   );
 }

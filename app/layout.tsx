@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Shrikhand, Bungee, Archivo_Black } from "next/font/google";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -86,7 +88,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to main content
         </a>
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

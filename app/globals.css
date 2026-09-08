@@ -32,6 +32,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/*
+ * Anchored sections need to clear the fixed navbar pill when smooth-scrolling,
+ * so section tops are never hidden underneath it.
+ */
+#home,
+section[id] {
+  scroll-margin-top: 7rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
