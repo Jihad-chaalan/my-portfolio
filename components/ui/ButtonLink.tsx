@@ -69,8 +69,21 @@ export function ButtonLink({
         aria-hidden="true"
         className="absolute inset-x-0 top-3 sm:top-2.5 bottom-0 -rotate-1 rounded-[4px] bg-orange transition-colors duration-200 group-hover:bg-canvas"
       />
-      <span className="relative font-display text-xl uppercase leading-none tracking-tight text-surface transition-colors duration-200 group-hover:text-forest sm:text-2xl">
-        {children}
+      <span className="relative inline-flex items-center gap-1.5 font-display text-xl uppercase leading-none tracking-tight text-surface transition-colors duration-200 group-hover:text-forest sm:text-2xl">
+        <span>{children}</span>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-[0.85em] w-[0.85em]"
+        >
+          <path d="M4 12h15" />
+          <path d="m13 6 6 6-6 6" />
+        </svg>
       </span>
     </>
   ) : (

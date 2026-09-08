@@ -73,7 +73,7 @@ export function Navbar() {
           className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3 sm:gap-6"
         >
           {/* Desktop links — centered */}
-          <ul className="col-start-2 hidden items-center gap-5 md:flex lg:gap-6">
+          <ul className="col-start-2 hidden items-center gap-12 md:flex lg:gap-20">
             {navLinks.map((link) => {
               const isActive = link.href.slice(1) === activeSection;
               return (
@@ -82,8 +82,8 @@ export function Navbar() {
                     href={hrefFor(link.href)}
                     aria-current={isActive ? "true" : undefined}
                     className={cn(
-                      "text-sm font-semibold transition-colors",
-                      isActive ? "text-orange" : "text-canvas hover:text-orange",
+                      "text-base font-bold transition-colors lg:text-lg",
+                      isActive ? "text-orange" : "text-surface hover:text-orange",
                     )}
                   >
                     {link.label}
