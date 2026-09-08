@@ -2,12 +2,18 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-type ButtonVariant = "primary" | "secondary" | "outline-light";
+type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "outline-light"
+  | "highlight";
 
 interface ButtonLinkProps {
   href: string;
   children: ReactNode;
-  /** "primary" = solid orange CTA; "secondary" = forest outline (light bg); "outline-light" = canvas outline (dark bg). */
+  /** "primary" = solid orange CTA; "secondary" = forest outline (light bg);
+   *  "outline-light" = canvas outline (dark bg);
+   *  "highlight" = flat pastel-orange highlighter block with chunky poster type. */
   variant?: ButtonVariant;
   className?: string;
   /** Open in a new tab (used for external links like Book a Call). */
@@ -16,12 +22,25 @@ interface ButtonLinkProps {
   onClick?: () => void;
 }
 
+/**
+ * Shared shell only — each variant supplies its own shape and typography
+ * so conflicting Tailwind utilities (e.g. rounded-md vs rounded-none,
+ * font-semibold vs font-display) never fight in the generated CSS.
+ */
+const baseClasses =
+  "inline-flex min-h-11 items-center justify-center gap-2 transition-colors duration-200";
+
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-orange text-forest hover:bg-forest hover:text-canvas",
+  primary:
+    "rounded-md bg-orange px-5 text-sm font-semibold text-forest hover:bg-forest hover:text-canvas",
   secondary:
-    "border-2 border-forest bg-transparent text-forest hover:bg-forest hover:text-canvas",
+    "rounded-md border-2 border-forest bg-transparent px-5 text-sm font-semibold text-forest hover:bg-forest hover:text-canvas",
   "outline-light":
-    "border-2 border-canvas bg-transparent text-canvas hover:bg-surface hover:text-forest",
+    "rounded-md border-2 border-canvas bg-transparent px-5 text-sm font-semibold text-canvas hover:bg-surface hover:text-forest",
+  /* Highlighter marker: the shell stays transparent — the swipe is an
+     absolutely positioned, slightly skewed orange band rendered behind the
+     text, overshooting its edges like a real marker stroke. */
+  highlight: "group relative",
 };
 
 /**
@@ -38,10 +57,24 @@ export function ButtonLink({
   ariaLabel,
   onClick,
 }: ButtonLinkProps) {
-  const classes = cn(
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors duration-200",
-    variantClasses[variant],
-    className,
+  const isHighlight = variant === "highlight";
+
+  const classes = cn(baseClasses, variantClasses[variant], className);
+
+  /* The highlight variant renders a skewed marker band behind the text
+     instead of a plain background box. */
+  const content = isHighlight ? (
+    <>
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-3 sm:top-2.5 bottom-0 -rotate-1 rounded-[4px] bg-orange transition-colors duration-200 group-hover:bg-canvas"
+      />
+      <span className="relative font-display text-xl uppercase leading-none tracking-tight text-surface transition-colors duration-200 group-hover:text-forest sm:text-2xl">
+        {children}
+      </span>
+    </>
+  ) : (
+    children
   );
 
   if (external) {
@@ -54,14 +87,14 @@ export function ButtonLink({
         rel="noopener noreferrer"
         onClick={onClick}
       >
-        {children}
+        {content}
       </a>
     );
   }
 
   return (
     <Link href={href} className={classes} aria-label={ariaLabel} onClick={onClick}>
-      {children}
+      {content}
     </Link>
   );
 }

@@ -70,10 +70,10 @@ export function Navbar() {
       <div className="flex w-full flex-col overflow-hidden rounded-full bg-forest px-4 shadow-lg shadow-forest/30 sm:px-8">
         <nav
           aria-label="Primary"
-          className="flex items-center justify-center gap-4 py-3 sm:gap-8"
+          className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3 sm:gap-6"
         >
-          {/* Desktop links */}
-          <ul className="hidden items-center gap-5 md:flex lg:gap-6">
+          {/* Desktop links — centered */}
+          <ul className="col-start-2 hidden items-center gap-5 md:flex lg:gap-6">
             {navLinks.map((link) => {
               const isActive = link.href.slice(1) === activeSection;
               return (
@@ -93,24 +93,25 @@ export function Navbar() {
             })}
           </ul>
 
-          <div className="hidden md:flex">
+          {/* Book a Call — pinned to the far right, highlighter style */}
+          <div className="hidden justify-self-end md:flex">
             <ButtonLink
               href={siteConfig.links.bookACall}
               external
-              className="py-2.5"
+              variant="highlight"
             >
               Book a Call
             </ButtonLink>
           </div>
 
-          {/* Mobile menu toggle */}
+          {/* Mobile menu toggle — far right on small screens */}
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-canvas transition-colors hover:bg-canvas/10 md:hidden"
+            className="col-start-3 inline-flex h-11 w-11 items-center justify-center justify-self-end rounded-md text-canvas transition-colors hover:bg-canvas/10 md:hidden"
           >
             <svg
               width="20"
@@ -150,6 +151,7 @@ export function Navbar() {
                 <ButtonLink
                   href={siteConfig.links.bookACall}
                   external
+                  variant="highlight"
                   onClick={() => setMenuOpen(false)}
                   className="w-full"
                 >
