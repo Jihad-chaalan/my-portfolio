@@ -9,6 +9,12 @@ interface SectionHeadingProps {
   align?: "left" | "center";
   /** "dark" for headings that sit on a forest background. */
   tone?: "light" | "dark";
+  /**
+   * "highlight" wraps the title in the orange highlighter-marker treatment
+   * used by the Book a Call CTA — a slightly skewed orange band behind the
+   * word, overshooting its edges like a real marker stroke.
+   */
+  highlight?: boolean;
   className?: string;
 }
 
@@ -23,10 +29,13 @@ export function SectionHeading({
   eyebrow,
   align = "center",
   tone = "light",
+  highlight = false,
   className,
 }: SectionHeadingProps) {
   const headingColor = tone === "dark" ? "text-canvas" : "text-forest";
   const eyebrowColor = tone === "dark" ? "text-canvas/70" : "text-forest/70";
+  const markerColor = tone === "dark" ? "bg-orange" : "bg-orange";
+  const titleColor = highlight && tone === "dark" ? "text-surface" : headingColor;
 
   return (
     <div
@@ -45,10 +54,23 @@ export function SectionHeading({
         id={headingId}
         className={cn(
           "font-display text-4xl uppercase leading-none tracking-tight sm:text-5xl md:text-6xl",
-          headingColor,
+          titleColor,
         )}
       >
-        {title}
+        {highlight ? (
+          <span className="relative inline-block px-2">
+            <span
+              aria-hidden="true"
+              className={cn(
+                "absolute inset-x-0 top-[0.28em] bottom-0 -rotate-1 rounded-[4px]",
+                markerColor,
+              )}
+            />
+            <span className="relative">{title}</span>
+          </span>
+        ) : (
+          title
+        )}
       </h2>
     </div>
   );

@@ -52,7 +52,7 @@ Tracks implementation progress for the portfolio rebuild. Update this file at th
 
 - [ ] **Improve header (navbar) styling** — flat rounded forest-green pill, same width as the hero box (small margins only), no borders/rings; nav links About/Skills/Projects/Contact + Book a Call. **Draft implemented — awaiting user confirmation.**
 - [ ] **Improve Hero section styling** — wide rounded forest-green box with small margins (matches navbar width), no borders; large rectangular photo (~half the hero width, tall) on the left, "Hey, I'm Jihad Chaalan / Full-Stack AI Engineer" + CTAs on the right. **Draft implemented — awaiting user confirmation.**
-- [ ] **Improve Skills section styling** — refine the three skill cards: card depth/borders, heading hierarchy, icon/index accents, tech-chip styling, grid rhythm and responsive stacking.
+- [ ] **Improve Skills section styling** — section header (eyebrow + "Skills" + intro) fixed on the left and never animated; each skill box contains its own title, description, and tech tags, is slightly rotated (alternating tilts), and the whole box reveals one after another on scroll (Reveal component, IntersectionObserver trigger zone). **Draft implemented — awaiting user confirmation.**
 - [ ] **Improve Projects section styling** — refine project cards: image treatment, card borders/hover, name typography, feature list, chip density, grid balance, and visual priority of the featured projects.
 - [ ] **Improve Contact section styling** — refine the final CTA block: forest-background composition, heading, message, button arrangement and spacing, and the link row.
 

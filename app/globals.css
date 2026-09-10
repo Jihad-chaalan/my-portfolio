@@ -73,3 +73,12 @@ body {
   color: var(--color-surface);
 }
 
+/*
+ * Soft, wide, low-opacity card shadow — tinted with the theme ink color
+ * (forest) via color-mix so no colors are hard-coded here.
+ */
+.skill-card-shadow {
+  box-shadow: 0 20px 40px -24px
+    color-mix(in srgb, var(--color-forest) 22%, transparent);
+}
+
