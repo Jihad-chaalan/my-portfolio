@@ -8,20 +8,23 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectCard } from "./ProjectCard";
 
 /**
- * Pinned one-at-a-time showcase for the Projects section.
+ * Responsive Projects showcase.
  *
- * Layout: a full-viewport sticky row — fixed left column (highlighted
- * "Projects" title + intro) and a track of project cards. Vertical page
- * cards are spaced 0.8 viewports apart with gentle 0.6-viewport slides:
- * each card waits off-screen right, glides into the stage spot —
- * horizontally centered in the area
- * right of the title column — while the previous card yields in place
- * (small drift + fade, never crossing the title column), so exactly one
- * card is visible at a time.
+ * - Below `lg` (< 1024px): a compact swipe carousel — scroll-snap shows
+ *   one card at a time with the next peeking in, so the section stays
+ *   short for any number of projects. Pure CSS, no JavaScript needed.
+ * - From `lg` up: the pinned one-at-a-time showcase — a full-viewport
+ *   sticky row with the title fixed left while each card glides into a
+ *   stage spot horizontally centered in the area right of the title
+ *   column. Cards wait off-screen right, spaced 0.8 viewports apart with
+ *   gentle 0.6-viewport slides, while the previous card yields in place
+ *   (small drift + fade, never crossing the title column), so exactly one
+ *   card is visible at a time.
  *
- * Progressive enhancement: the CSS default (h-[400vh] + sticky) pins the
- * row even without JS; the card choreography is GSAP-scrubbed, i.e. driven
- * 1:1 by user scrolling — not autonomous animation.
+ * The breakpoint is owned by gsap.matchMedia: crossing it reverts every
+ * trigger, tween, and inline style the pinned setup created, and
+ * re-creates them when the viewport matches again. The choreography is
+ * scrubbed — driven 1:1 by user scrolling, not autonomous animation.
  */
 export function ProjectsShowcase({ projects }: { projects: Project[] }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -32,9 +35,14 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
     const track = trackRef.current;
     if (!wrap || !track) return;
 
-    try {
-      gsap.registerPlugin(ScrollTrigger);
-
+    /**
+     * The pinned showcase exists only from `lg` up — smaller screens get
+     * the stacked layout rendered in the JSX below. gsap.matchMedia owns
+     * the breakpoint: crossing it reverts everything this setup created
+     * (triggers, inline styles, wrapper height) and re-creates it when the
+     * viewport matches again.
+     */
+    const setupShowcase = () => {
       // The sticky full-viewport row that pins while its content scrolls.
       const stage = track.closest<HTMLElement>("[data-projects-stage]");
       if (!stage) return;
@@ -214,6 +222,15 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
         stage.scrollLeft = 0;
         wrap.style.height = "";
       };
+    };
+
+    try {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 1024px)", setupShowcase);
+
+      return () => mm.revert();
     } catch (error) {
       // Never fail silently — surface setup problems in the console.
       console.error("[ProjectsShowcase] setup failed:", error);
@@ -221,12 +238,53 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
   }, []);
 
   return (
-    <div ref={wrapRef} data-projects-wrap className="h-[300vh]">
+    <div ref={wrapRef} data-projects-wrap className="lg:h-[300vh]">
+      {/* Compact swipe carousel for small screens — one card per snap, so
+          the section stays short no matter how many projects exist. Pure
+          CSS (scroll-snap), no JavaScript needed. */}
+      <div className="lg:hidden">
+        <div className="flex flex-col gap-4 px-4 pt-24 sm:px-8">
+          <SectionHeading
+            headingId="projects-heading-compact"
+            eyebrow="Selected work"
+            title="Projects"
+            align="left"
+            highlight
+          />
+          <p className="max-w-md text-sm leading-relaxed text-forest/75 sm:text-base">
+            Real systems built end-to-end — architecture, interfaces, and
+            deployment.
+          </p>
+        </div>
+        <div
+          role="region"
+          aria-label="Projects — swipe horizontally to browse"
+          tabIndex={0}
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pt-6 pb-4 [scrollbar-width:none] sm:px-8 [&::-webkit-scrollbar]:hidden"
+        >
+          {projects.map((project) => (
+            <div
+              key={project.slug}
+              className="w-[86vw] max-w-md shrink-0 snap-center"
+            >
+              <ProjectCard project={project} />
+            </div>
+          ))}
+        </div>
+        <p
+          aria-hidden="true"
+          className="px-4 pb-14 text-center text-xs font-semibold uppercase tracking-[0.18em] text-forest/60 sm:px-8"
+        >
+          Swipe to explore →
+        </p>
+      </div>
+
+      {/* Pinned showcase for lg+ — display:none below the breakpoint. */}
       <div
         data-projects-stage
-        className="sticky top-0 flex h-svh flex-col justify-center overflow-x-auto overflow-y-hidden"
+        className="sticky top-0 hidden h-svh flex-col justify-center overflow-x-auto overflow-y-hidden lg:flex"
       >
-        <div className="flex items-center gap-10 pl-4 pr-[10vw] sm:pl-8 lg:gap-16 lg:pl-24">
+        <div className="flex items-center gap-16 pl-24 pr-[10vw]">
           {/* Fixed left column — title + intro, never moves while pinned */}
           <div className="w-[min(80vw,360px)] shrink-0">
             <SectionHeading
@@ -243,12 +301,12 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
           </div>
 
           {/* Horizontal track of project cards */}
-          <div ref={trackRef} className="flex items-stretch gap-8 lg:gap-12">
+          <div ref={trackRef} className="flex items-stretch gap-12">
             {projects.map((project) => (
               <div
                 key={project.slug}
                 data-project-card
-                className="w-[min(85vw,600px)] shrink-0 xl:w-[min(85vw,720px)]"
+                className="w-[min(720px,calc(90vw-13rem-360px))] shrink-0"
               >
                 <ProjectCard project={project} />
               </div>
