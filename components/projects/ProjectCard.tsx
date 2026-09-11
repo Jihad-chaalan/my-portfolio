@@ -17,18 +17,18 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const href = `/projects/${project.slug}`;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border-2 border-forest/15 bg-surface transition-colors duration-200 hover:border-orange">
+    <article className="skill-card-shadow group flex flex-col overflow-hidden rounded-2xl border border-forest/10 bg-surface transition-colors duration-200 hover:border-orange">
       <Link
         href={href}
         aria-label={`View details for ${project.name}`}
-        className="relative block aspect-[3/2] overflow-hidden bg-forest"
+        className="relative block aspect-[16/9] max-h-[42svh] overflow-hidden bg-forest"
       >
         <Image
           src={project.image.src}
           alt={project.image.alt}
           fill
           unoptimized
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 768px) 100vw, 45vw"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <span className="absolute left-3 top-3 rounded-full bg-forest px-3 py-1 text-xs font-semibold text-canvas">
@@ -37,7 +37,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </Link>
 
       <div className="flex flex-col gap-4 p-6 sm:p-7">
-        <h3 className="font-sub text-2xl leading-tight text-forest">
+        <h3 className="font-sub text-2xl leading-tight text-forest sm:text-3xl">
           <Link
             href={href}
             className="transition-colors duration-200 hover:text-orange"

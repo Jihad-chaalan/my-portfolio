@@ -50,9 +50,9 @@ Tracks implementation progress for the portfolio rebuild. Update this file at th
 
 > No subtask below is done yet — each will become `[x]` only after the user explicitly approves the styling of that section.
 
-- [ ] **Improve header (navbar) styling** — flat rounded forest-green pill, same width as the hero box (small margins only), no borders/rings; nav links About/Skills/Projects/Contact + Book a Call. **Draft implemented — awaiting user confirmation.**
-- [ ] **Improve Hero section styling** — wide rounded forest-green box with small margins (matches navbar width), no borders; large rectangular photo (~half the hero width, tall) on the left, "Hey, I'm Jihad Chaalan / Full-Stack AI Engineer" + CTAs on the right. **Draft implemented — awaiting user confirmation.**
-- [ ] **Improve Skills section styling** — section header (eyebrow + "Skills" + intro) fixed on the left and never animated; each skill box contains its own title, description, and tech tags, is slightly rotated (alternating tilts), and the whole box reveals one after another on scroll (Reveal component, IntersectionObserver trigger zone). **Draft implemented — awaiting user confirmation.**
+- [x] **Improve header (navbar) styling** — flat rounded forest-green pill, same width as the hero box (small margins only), no borders/rings; nav links About/Skills/Projects/Contact + Book a Call. **User confirmed.**
+- [x] **Improve Hero section styling** — wide rounded forest-green box with small margins (matches navbar width), no borders; large rectangular photo (~half the hero width, tall) on the left, "Hey, I'm Jihad Chaalan / Full-Stack AI Engineer" + CTAs on the right. **User confirmed.**
+- [x] **Improve Skills section styling** — section header with the orange highlighter-marker "Skills" title (Book a Call treatment); three alternating left/right white cards (85% width, 340px min-height) with GSAP-owned tilts (-1.2° / +2.8° / -1.2°), 25px gaps, corner overlaps, content vertically centered, and scroll-scrubbed reveal (fade + 100px rise) with a pause between boxes, reversible on scroll-up. **User confirmed.**
 - [ ] **Improve Projects section styling** — refine project cards: image treatment, card borders/hover, name typography, feature list, chip density, grid balance, and visual priority of the featured projects.
 - [ ] **Improve Contact section styling** — refine the final CTA block: forest-background composition, heading, message, button arrangement and spacing, and the link row.
 
