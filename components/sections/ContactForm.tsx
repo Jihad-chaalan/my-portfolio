@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
@@ -20,6 +20,15 @@ const requiredMark = (
   </span>
 );
 
+type FormStatus = "idle" | "submitting" | "success" | "error";
+
+/* Web3Forms endpoint — a form-to-email relay, no backend required. */
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+/* The key routes submissions to the inbox registered at web3forms.com. It
+ * is public-safe by design (it only identifies the inbox, it is not a
+ * secret credential) but is still kept out of git via the env file. */
+const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+
 /**
  * The Contact section's direct-message form, styled as a sheet of paper
  * taped to the forest slab: a slightly tilted white page (square top-left
@@ -29,30 +38,74 @@ const requiredMark = (
  * message (see .paper-ruled), underline fields, and the site's
  * highlighter-marker send button.
  *
- * There is no backend, so submitting composes an email in the visitor's
- * mail app with everything prefilled (name, email, phone, project details)
- * — a dependency-free handoff that can later be swapped for a service or a
- * server action without changing the layout.
+ * Submissions go through Web3Forms (https://web3forms.com) — a form-to-email
+ * relay that needs no backend: the form POSTs to their API with an access
+ * key and the message lands in the owner's inbox. The key is read from
+ * `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` (set in `.env.local`, see
+ * `.env.example`). Without a configured key — e.g. a fresh clone — the form
+ * falls back to composing the message in the visitor's mail app, so the
+ * section never breaks.
  *
  * Validation is native (required + type=email), consistent with the
  * project's no-extra-dependencies approach.
  */
 export function ContactForm({ className }: ContactFormProps) {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const [status, setStatus] = useState<FormStatus>("idle");
 
-    const data = new FormData(event.currentTarget);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (status === "submitting") return;
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
     const name = String(data.get("name") ?? "").trim();
     const email = String(data.get("email") ?? "").trim();
     const phone = String(data.get("phone") ?? "").trim();
     const details = String(data.get("details") ?? "").trim();
 
-    const subject = encodeURIComponent(`New project inquiry from ${name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nPhone: ${phone || "—"}\n\n${details}`,
-    );
+    /* No key configured (e.g. a fresh clone): hand off to the mail app so
+     * the form still works everywhere, just without inbox delivery. */
+    if (!ACCESS_KEY) {
+      const subject = encodeURIComponent(`New project inquiry from ${name}`);
+      const body = encodeURIComponent(
+        `Name: ${name}\nEmail: ${email}\nPhone: ${phone || "—"}\n\n${details}`,
+      );
+      window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${body}`;
+      return;
+    }
 
-    window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${body}`;
+    setStatus("submitting");
+    try {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
+          subject: `New project inquiry from ${name}`,
+          from_name: `${siteConfig.name} portfolio — contact form`,
+          name,
+          email,
+          phone: phone || "—",
+          message: details,
+          botcheck: data.get("botcheck") === "on",
+        }),
+      });
+      const result = (await response.json().catch(() => null)) as {
+        success?: boolean;
+      } | null;
+
+      if (response.ok && result?.success) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -97,7 +150,7 @@ export function ContactForm({ className }: ContactFormProps) {
 
       <div className="relative p-6 pb-8 pt-10 sm:p-8 sm:pt-10 sm:pb-10">
       <p className="font-sub text-lg uppercase leading-none text-forest">
-        Say Hello
+        Get in Touch
       </p>
       <p className="mt-2 text-sm leading-relaxed text-forest/60">
         It lands straight in my inbox.
@@ -137,45 +190,58 @@ export function ContactForm({ className }: ContactFormProps) {
 
       <div className="mt-6">
         <label htmlFor="contact-phone" className={labelClasses}>
-          Phone number
+          Phone number {requiredMark}
         </label>
         <input
           id="contact-phone"
           name="phone"
           type="tel"
+          required
           autoComplete="tel"
-          placeholder="Optional — for a quick call"
+          placeholder="Your phone number"
           className={inputClasses}
         />
       </div>
 
       <div className="mt-6">
         <label htmlFor="contact-details" className={labelClasses}>
-          Your project {requiredMark}
+          Details {requiredMark}
         </label>
         <textarea
           id="contact-details"
           name="details"
           required
           rows={4}
-          placeholder="Tell me about it — goals, scope, timeline…"
+          placeholder="Tell me about your project, idea, or problem…"
           className={cn(inputClasses, "paper-ruled resize-y leading-6")}
         />
       </div>
+
+      {/* Honeypot: real visitors never see or tick it; bots that fill it
+          get silently dropped by Web3Forms. */}
+      <input
+        type="checkbox"
+        name="botcheck"
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+      />
 
       <div className="mt-8 flex flex-wrap items-center gap-4">
         {/* Highlighter-marker send button — same treatment as "Let's Build
             It" and "Book a Call": a skewed orange band behind chunky type. */}
         <button
           type="submit"
-          className="group relative inline-flex min-h-11 items-center px-1 transition-transform duration-200 hover:-translate-y-0.5"
+          disabled={status === "submitting"}
+          aria-busy={status === "submitting"}
+          className="group relative inline-flex min-h-11 items-center px-1 transition-transform duration-200 hover:-translate-y-0.5 disabled:pointer-events-none disabled:opacity-60"
         >
           <span
             aria-hidden="true"
             className="absolute inset-x-0 top-1.5 bottom-0 -rotate-1 rounded-[4px] bg-orange transition-colors duration-200 group-hover:bg-forest"
           />
           <span className="relative inline-flex items-center gap-2 font-display text-lg uppercase leading-none tracking-tight text-surface">
-            Send It
+            {status === "submitting" ? "Sending" : "Send It"}
             <svg
               aria-hidden="true"
               viewBox="0 0 24 24"
@@ -191,8 +257,19 @@ export function ContactForm({ className }: ContactFormProps) {
             </svg>
           </span>
         </button>
-        <p className="text-xs leading-relaxed text-forest/55">
-          Opens your email app with your message ready to send.
+        <p
+          role="status"
+          aria-live="polite"
+          className={cn(
+            "text-xs leading-relaxed",
+            status === "error" ? "font-semibold text-orange" : "text-forest/55",
+          )}
+        >
+          {status === "idle" && "Goes straight to my inbox."}
+          {status === "submitting" && "Sending your message…"}
+          {status === "success" && "Sent! I'll get back to you soon."}
+          {status === "error" &&
+            "Couldn't send — please try again, or email me directly."}
         </p>
         </div>
       </div>

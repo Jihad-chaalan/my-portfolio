@@ -11,12 +11,11 @@ export const siteConfig = {
   description:
     "Full-Stack AI Engineer building production-oriented AI systems: RAG pipelines, AI agents, APIs, and the web applications around them — from frontend to backend to deployment.",
   url: "https://jihadchaalan.dev",
-  email: "hello@jihadchaalan.dev",
-  /* Display form for the Contact section; the tel: link is derived from it.
-   * TODO: replace with your real phone number. */
-  phone: "+00 000 000 000",
+  email: "chaalan2004@gmail.com",
+  /* Display form for the Contact section; the tel: link is derived from it. */
+  phone: "+961 70 627 215",
   links: {
-    github: "https://github.com/jihadchaalan",
+    github: "https://github.com/jihad-chaalan",
     linkedin: "https://www.linkedin.com/in/jihadchaalan",
     bookACall: "https://cal.com/jihadchaalan",
   },

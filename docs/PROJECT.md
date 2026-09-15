@@ -26,7 +26,7 @@ The homepage is a single scrolling page, in this exact order, using semantic sec
 | Hero       | `#home`     | Immediate identity: "Full-Stack AI Engineer", supporting message, CTAs   |
 | Skills     | `#skills`   | Three scannable categories: AI Engineering, Full-Stack, DevOps & Deployment |
 | Projects   | `#projects` | The centerpiece — real, product-like project cards                      |
-| Contact    | `#contact`  | Compact two-part final block on the forest slab: direct routes on the left (phone, email, LinkedIn, GitHub) beside a "note taped to the wall" contact form on the right; the form composes a prefilled email (no backend) |
+| Contact    | `#contact`  | Compact two-part final block on the forest slab: direct routes on the left (phone, email, LinkedIn, GitHub) beside a "note taped to the wall" contact form on the right; the form submits via Web3Forms (mailto fallback when no access key is configured) |
 
 Navigation (`Home / Skills / Projects / Contact`) smooth-scrolls to these sections. "Book a Call" links to an external booking service — there is intentionally no custom scheduling system.
 
