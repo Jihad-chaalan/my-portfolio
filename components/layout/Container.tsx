@@ -4,6 +4,9 @@ import { cn } from "@/lib/cn";
 interface ContainerProps {
   children: ReactNode;
   className?: string;
+  /** Widen to `max-w-7xl` (used by sections that need less side margin,
+   *  e.g. the two-column Contact block). */
+  wide?: boolean;
   /** Escape hatch for hooks that target the container via data attributes
    *  (e.g. ContactReveal animates its direct children). */
   "data-contact-items"?: boolean | string;
@@ -17,11 +20,16 @@ interface ContainerProps {
 export function Container({
   children,
   className,
+  wide = false,
   ...rest
 }: ContainerProps) {
   return (
     <div
-      className={cn("mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8", className)}
+      className={cn(
+        wide ? "max-w-7xl" : "max-w-6xl",
+        "mx-auto w-full px-4 sm:px-6 lg:px-8",
+        className,
+      )}
       {...rest}
     >
       {children}

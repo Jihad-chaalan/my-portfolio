@@ -82,3 +82,92 @@ body {
     color-mix(in srgb, var(--color-forest) 22%, transparent);
 }
 
+/*
+ * Paper note (Contact form), front sheet: fine torn bottom edge plus a cut
+ * dog-ear corner (top-right), drawn with a clip-path. No shadow here — the
+ * shadow belongs to the under-sheet below, whose silhouette wraps the whole
+ * stack. Teeth are px-based (~2-9px deep) so the tear stays subtle and
+ * consistent at any card size.
+ */
+.paper-note {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 30px) 0,
+    100% 30px,
+    100% calc(100% - 3px),
+    94% calc(100% - 7px),
+    89% calc(100% - 2px),
+    83% calc(100% - 8px),
+    78% calc(100% - 3px),
+    72% calc(100% - 9px),
+    66% calc(100% - 2px),
+    60% calc(100% - 7px),
+    55% calc(100% - 3px),
+    49% calc(100% - 9px),
+    43% calc(100% - 2px),
+    37% calc(100% - 8px),
+    32% calc(100% - 4px),
+    26% calc(100% - 9px),
+    20% calc(100% - 3px),
+    15% calc(100% - 7px),
+    9% calc(100% - 2px),
+    4% calc(100% - 8px),
+    0 calc(100% - 4px)
+  );
+}
+
+/*
+ * Paper note, under-sheet: a second torn page peeking through the gaps of
+ * the front tear (like a stack of ripped notes). Extends ~7px below the
+ * front sheet with a coarser, differently-phased tear, carries the
+ * drop-shadow for the whole stack, and shares the dog-ear cut so nothing
+ * white peeks through the fold.
+ */
+.paper-note-under {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 30px) 0,
+    100% 30px,
+    100% calc(100% - 2px),
+    96% calc(100% - 9px),
+    92% calc(100% - 4px),
+    88% calc(100% - 12px),
+    83% calc(100% - 5px),
+    78% calc(100% - 10px),
+    74% calc(100% - 3px),
+    69% calc(100% - 12px),
+    64% calc(100% - 6px),
+    59% calc(100% - 11px),
+    54% calc(100% - 4px),
+    49% calc(100% - 13px),
+    44% calc(100% - 6px),
+    39% calc(100% - 10px),
+    34% calc(100% - 3px),
+    29% calc(100% - 12px),
+    24% calc(100% - 5px),
+    19% calc(100% - 11px),
+    14% calc(100% - 4px),
+    9% calc(100% - 13px),
+    4% calc(100% - 6px),
+    0 calc(100% - 10px)
+  );
+  filter: drop-shadow(
+    0 16px 20px
+      color-mix(in srgb, var(--color-forest) 30%, transparent)
+  );
+}
+
+/*
+ * Ruled notepad lines for the Contact form's textarea (one line per text
+ * row at leading-6 = 24px). Implemented as a repeating-linear-gradient
+ * purely as a line-pattern technique — a 1px rule every 24px, no color
+ * blending, on-palette via color-mix.
+ */
+.paper-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 23px,
+    color-mix(in srgb, var(--color-forest) 12%, transparent) 23px 24px
+  );
+}
+

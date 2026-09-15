@@ -36,7 +36,8 @@ export function Contact() {
       <ContactReveal className="relative">
         <Container
           data-contact-items
-          className="grid grid-cols-1 gap-12 py-16 sm:py-20 lg:grid-cols-2 lg:gap-16"
+          wide
+          className="grid grid-cols-1 gap-12 py-16 sm:py-20 lg:grid-cols-2 lg:gap-20 xl:gap-24"
         >
           {/* Left — invitation + direct contact routes. */}
           <div className="flex flex-col items-start gap-8">
