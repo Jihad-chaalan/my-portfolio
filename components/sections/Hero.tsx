@@ -16,12 +16,7 @@ export function Hero() {
       id="home"
       className="relative mx-2 rounded-[2.5rem] bg-forest sm:mx-4 sm:rounded-[3rem] lg:mx-6 lg:flex lg:min-h-[min(calc(100vh-1rem),60rem)] lg:flex-col"
     >
-      <span
-        aria-hidden="true"
-        className="absolute right-8 top-1/2 hidden -translate-y-1/2 rotate-90 text-xs font-medium tracking-[0.35em] text-canvas/50 xl:block"
-      >
-        RAG — AGENTS — AUTOMATION
-      </span>
+      
 
       <section
         id="about"
@@ -56,16 +51,14 @@ export function Hero() {
             Full-Stack AI Engineer
           </h1>
           <p className="max-w-2xl text-lg leading-relaxed text-canvas/85 lg:text-xl">
-            I build AI-powered websites, applications, RAG systems, AI agents,
-            and intelligent systems — taking real products from frontend to
-            backend to deployment.
+Building AI systems — agents, RAG pipelines, and chatbots — automating business workflows and turning real problems into shipped products.
           </p>
 
           <ul
             className="flex flex-wrap items-center justify-center gap-2 lg:justify-start"
             aria-label="What I build"
           >
-            {["RAG Systems", "AI Agents", "Automation", "Full-Stack"].map((item) => (
+            {["AI Agents", "Automation", "RAG Systems", "Web Development"].map((item) => (
               <li
                 key={item}
                 className="rounded-full border border-canvas/30 px-4 py-1.5 text-sm font-medium text-canvas"
@@ -79,13 +72,6 @@ export function Hero() {
             <ButtonLink href="#projects">View Projects</ButtonLink>
             <ButtonLink href="#contact" variant="outline-light">
               Contact Me
-            </ButtonLink>
-            <ButtonLink
-              href={siteConfig.links.bookACall}
-              external
-              variant="outline-light"
-            >
-              Book a Call
             </ButtonLink>
           </div>
         </div>

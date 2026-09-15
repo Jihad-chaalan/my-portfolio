@@ -166,9 +166,21 @@ export function SkillStack({ categories }: { categories: SkillCategory[] }) {
               <h3 className="text-2xl font-semibold text-forest sm:text-4xl">
                 {category.title}
               </h3>
-              <p className="mt-4 max-w-sm text-base leading-relaxed text-forest/75 sm:max-w-md sm:text-lg lg:text-xl">
+              <p className="mt-6 max-w-sm text-base leading-relaxed text-forest/75 sm:max-w-md sm:text-lg lg:text-xl">
                 {category.description}
               </p>
+              {/* Skill items - small chips below the description */}
+
+              <div className="flex flex-wrap gap-2 pt-4">
+                {category.items.map((item, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 rounded-full border border-forest/20 bg-forest/5 px-3 py-1.5 text-base text-forest/75 font-medium"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
             <span className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-orange/15 text-orange sm:h-32 sm:w-32">
               {cardIcons[index] ?? cardIcons[0]}

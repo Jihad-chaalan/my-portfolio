@@ -9,7 +9,7 @@ export const skillCategories: SkillCategory[] = [
     id: "ai-engineering",
     title: "AI Engineering",
     description:
-      "Designing and shipping AI systems that go beyond a single prompt — retrieval, reasoning, and automation working together.",
+      "Building production-ready AI systems that combine LLMs, retrieval, agents, and automation to solve real-world problems.",
     items: [
       "Python",
       "LLMs",
@@ -17,9 +17,7 @@ export const skillCategories: SkillCategory[] = [
       "LangChain",
       "LangGraph",
       "AI Agents",
-      "Embeddings",
-      "Hybrid Search",
-      "Reranking",
+"Vector DB",
       "n8n",
     ],
   },
@@ -35,6 +33,6 @@ export const skillCategories: SkillCategory[] = [
     title: "DevOps & Deployment",
     description:
       "Shipping and running applications reliably, not just demoing them locally.",
-    items: ["Docker", "Git", "GitHub Actions", "DigitalOcean", "Linux", "CI/CD"],
+    items: ["Docker", "Git", "GitHub Actions", "DigitalOcean", "CI/CD"],
   },
 ];
