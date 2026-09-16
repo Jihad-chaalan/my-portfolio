@@ -35,11 +35,10 @@ interface HeroIntroProps {
  * Page-load intro for the Hero section (single gsap.timeline()).
  *
  * A full-screen forest overlay decodes the name one letter at a time —
- * a single center glyph (small fixed orange dot above it) scrambles, locks
- * on "J", scrambles again, locks "I", and so on through "JIHAD CHAALAN" —
- * after which the overlay
- * the real hero container's exact rect and vanishes — the real hero
- * underneath is pixel-identical at that moment, so the swap is invisible.
+ * a single center glyph locks on "J", then "I", and so on through
+ * "JIHAD CHAALAN" — after which the overlay shrinks into the real hero
+ * container's exact rect and vanishes; the real hero underneath is
+ * pixel-identical at that moment, so the swap is invisible.
  * The page then reveals in staggered stages: nav + wordmark + eyebrow,
  * headline, paragraph + chips, CTAs (primary muted → full orange) and the
  * portrait springing in from bottom-left.
@@ -81,7 +80,6 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
     }
 
     const letter = overlay.querySelector<HTMLElement>("[data-intro='letter']");
-    const dot = overlay.querySelector<HTMLElement>("[data-intro='dot']");
     const nav = document.querySelector<HTMLElement>("[data-intro='nav']");
     const eyebrow = hero.querySelector<HTMLElement>("[data-intro='eyebrow']");
     const wordmarkEl = hero.querySelector<HTMLElement>(
@@ -103,9 +101,6 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
      * shrink tween. */
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-
-    /* Tracks the walk's current letter so the dot pops on each lock-in. */
-    let lastSlot = -1;
 
     const ctx = gsap.context(() => {
       /* Hide everything that fades in later (opacity/visibility + offsets
@@ -162,19 +157,6 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
             sequence.length - 1,
           );
 
-          /* The dot pops every time the walk advances to a new letter —
-           * it becomes the metronome of the name. */
-          if (slot !== lastSlot) {
-            lastSlot = slot;
-            if (dot) {
-              gsap.fromTo(
-                dot,
-                { scale: 1.45 },
-                { scale: 1, duration: 0.35, ease: "power2.out" },
-              );
-            }
-          }
-
           const phase = tick - slot * ticksPerChar;
           const char = sequence[slot];
           if (char === " ") {
@@ -209,7 +191,7 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
        * rect is measured when the tween starts (function-based values), so
        * late font swaps can't skew the target. */
       tl.to(
-        [letter, dot].filter((el): el is HTMLElement => el !== null),
+        [letter].filter((el): el is HTMLElement => el !== null),
         { autoAlpha: 0, y: 12, duration: 0.22, ease: "power1.in" },
         ">0.06",
       );
@@ -291,16 +273,10 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
         "fixed left-0 top-0 z-[999] flex h-screen w-screen items-center justify-center bg-forest motion-reduce:hidden"
       }
     >
-      <div className="flex flex-col items-center gap-5">
-        {/* Small fixed dot — stays put no matter which letter is showing,
-            pops on every letter lock-in (flat halo ring, on-palette). */}
-        <span
-          data-intro="dot"
-          className="h-3.5 w-3.5 rounded-full bg-orange ring-[3px] ring-orange/25"
-        />
+      <div className="flex flex-col items-center">
         <span
           data-intro="letter"
-          className="font-brand select-none text-[clamp(3.5rem,9vw,6rem)] leading-none text-canvas"
+          className="font-brand select-none text-[clamp(2.5rem,5vw,3.5rem)] leading-none text-canvas"
         >
           {wordmark.charAt(0)}
         </span>
