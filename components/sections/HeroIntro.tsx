@@ -20,7 +20,7 @@ const SCRAMBLE_INTERVAL = 0.08;
  * ever want the slot-machine flicker back before each real letter. */
 const SCRAMBLE_SWAPS = 0;
 /* How many ticks each real letter stays on screen. */
-const LETTER_HOLD = 2;
+const LETTER_HOLD = 1.8;
 /* Palette orange (see app/globals.css --color-orange). */
 const ORANGE_HEX = "#FC7D14";
 /* Starting color of the primary CTA before it "inks in" (orange at 35%). */
@@ -51,8 +51,8 @@ interface HeroIntroProps {
  *
  * Guards: plays once per page load (module flag, survives SPA navigations);
  * skips entirely for prefers-reduced-motion (the overlay is also
- * `motion-reduce:hidden`); scroll is locked while the overlay is up;
- * cleanup via gsap.context.
+ * `motion-reduce:hidden`); scroll is never locked, so the scrollbar stays
+ * put and nothing shifts when the intro ends; cleanup via gsap.context.
  */
 export function HeroIntro({ wordmark }: HeroIntroProps) {
   const overlayRef = useRef<HTMLDivElement | null>(null);
@@ -96,12 +96,13 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
     const photo = hero.querySelector<HTMLElement>("[data-intro='photo']");
     const primaryCta = ctas[0] ?? null;
 
-    /* Scroll stays locked while the overlay is up — otherwise scrolling
-     * would move the hero's viewport-relative rect out from under the
-     * shrink tween. */
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
+    /* Scroll is deliberately NOT locked. Hiding the scrollbar would widen
+     * the layout viewport by its width, which reflows the page and shifts
+     * every fixed element (the navbar) the instant the scrollbar returns.
+     * Leaving it in place means the scrollbar is visible from first paint
+     * and nothing moves when the intro ends. The overlay's targets are
+     * measured when the shrink tween starts, so a scroll during the intro
+     * still hands off to the hero's live rect. */
     const ctx = gsap.context(() => {
       /* Hide everything that fades in later (opacity/visibility + offsets
        * only — layout is untouched, so the hero's rect stays valid). */
@@ -138,7 +139,6 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
            * skip the whole intro. */
           hasPlayed = true;
           overlay.remove();
-          document.body.style.overflow = previousOverflow;
         },
       });
 
@@ -260,7 +260,6 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
     });
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       ctx.revert();
     };
   }, [wordmark]);
@@ -270,7 +269,7 @@ export function HeroIntro({ wordmark }: HeroIntroProps) {
       ref={overlayRef}
       aria-hidden="true"
       className={
-        "fixed left-0 top-0 z-[999] flex h-screen w-screen items-center justify-center bg-forest motion-reduce:hidden"
+        "fixed left-0 top-0 z-[999] flex h-screen w-full items-center justify-center bg-forest motion-reduce:hidden"
       }
     >
       <div className="flex flex-col items-center">
