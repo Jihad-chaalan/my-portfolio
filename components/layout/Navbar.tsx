@@ -66,7 +66,10 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-2 z-50 flex justify-center px-2 sm:px-4 lg:px-6">
+    <header
+      data-intro="nav"
+      className="fixed inset-x-0 top-2 z-50 flex justify-center px-2 sm:px-4 lg:px-6"
+    >
       <div className="flex w-full flex-col overflow-hidden rounded-full bg-forest px-4 shadow-lg shadow-forest/30 sm:px-8">
         <nav
           aria-label="Primary"
