@@ -73,13 +73,21 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </ul>
 
         {/* Actions: "View Details" holds the left edge, "Live Demo" the right.
-            Live Demo is always rendered — the demo URL comes from the data
-            source, and when it's `null` the button renders disabled instead of
-            disappearing, so every card presents the same actions. The optional
-            GitHub link sits beside Live Demo and, being absent everywhere
-            today, keeps the row to exactly those two buttons. */}
+            Both are hang-tag plates (same family as the hero CTAs): orange
+            fill, punched hole, offset shadow, tilt that straightens on hover.
+            Live Demo is always rendered — when the demo URL is `null` the
+            ButtonLink renders a real disabled button (no hole, muted). */}
         <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-1">
-          <ButtonLink href={href}>View Details</ButtonLink>
+          <ButtonLink
+            href={href}
+            className="relative rotate-[2deg] rounded-md border-2 border-forest bg-orange px-5 pl-6 font-display text-sm uppercase tracking-wide text-forest shadow-[4px_5px_0_0_var(--color-forest)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-forest)]"
+          >
+            <span
+              aria-hidden="true"
+              className="absolute left-2 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-forest"
+            />
+            View Details
+          </ButtonLink>
           <div className="flex flex-wrap items-center gap-3">
             {project.links.github ? (
               <ButtonLink
@@ -90,7 +98,21 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 GitHub
               </ButtonLink>
             ) : null}
-            <ButtonLink href={project.links.demo} external variant="secondary">
+            <ButtonLink
+              href={project.links.demo}
+              external
+              className={`relative rounded-md border-2 border-forest bg-orange px-5 font-display text-sm uppercase tracking-wide text-forest transition-all duration-200 ${
+                project.links.demo
+                  ? "rotate-[-2deg] pl-6 shadow-[4px_5px_0_0_var(--color-orange)] hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-orange)]"
+                  : ""
+              }`}
+            >
+              {project.links.demo ? (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-2 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-forest"
+                />
+              ) : null}
               Live Demo
             </ButtonLink>
           </div>

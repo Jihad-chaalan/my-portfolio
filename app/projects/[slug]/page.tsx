@@ -1,7 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ButtonLink } from "@/components/ui/ButtonLink";
 import { ProjectGallery } from "@/components/projects/ProjectGallery";
 import { ProjectDetailReveal } from "@/components/projects/ProjectDetailReveal";
 import {
@@ -99,18 +98,29 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <p className="max-w-2xl text-lg leading-relaxed text-forest/80 sm:text-xl">
               {project.tagline}
             </p>
-            <div className="flex shrink-0 flex-wrap items-center gap-3">
-              <ButtonLink href={project.links.demo} external variant="highlight">
+            <div className="flex shrink-0 flex-wrap items-center gap-4 sm:gap-5">
+              {/* Hero plates — the Technologies/Skills stamped-plate style,
+                  scaled up for display type. Same construction (thick border,
+                  flat offset shadow, uppercase display label, tilt), mirrored
+                  as a pair: orange plate / canvas plate, opposite shadows. */}
+              <Link
+                href={project.links.demo ?? "#"}
+                target={project.links.demo ? "_blank" : undefined}
+                rel={project.links.demo ? "noopener noreferrer" : undefined}
+                aria-disabled={!project.links.demo}
+                className={`inline-flex min-h-11 items-center rounded-md px-6 font-display text-base uppercase tracking-wide sm:text-lg ${project.links.demo ? "rotate-[2deg] border-2 border-forest bg-orange text-forest shadow-[5px_6px_0_0_var(--color-forest)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-forest)]" : "cursor-not-allowed border-2 border-forest/30 bg-canvas/60 text-forest/40 shadow-none"}`}
+              >
                 Live Demo
-              </ButtonLink>
+              </Link>
               {project.links.github ? (
-                <ButtonLink
+                <Link
                   href={project.links.github}
-                  external
-                  variant="secondary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 rotate-[-2deg] items-center rounded-md border-2 border-forest bg-canvas px-6 font-display text-base uppercase tracking-wide text-forest shadow-[5px_6px_0_0_var(--color-orange)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-orange)] sm:text-lg"
                 >
                   GitHub
-                </ButtonLink>
+                </Link>
               ) : null}
             </div>
           </div>

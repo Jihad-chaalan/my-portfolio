@@ -80,11 +80,44 @@ Building AI systems — agents, RAG pipelines, and chatbots — automating busin
 
           <div
             data-intro="ctas"
-            className="flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+            className="flex flex-wrap items-center justify-center gap-5 sm:gap-6 lg:justify-start"
           >
-            <ButtonLink href="#projects">View Projects</ButtonLink>
-            <ButtonLink href="#contact" variant="outline-light">
+            {/* Hero CTAs as "hang tags" — cousins of the skill stamps: same
+                thick border, flat offset shadow and display type, but shaped
+                like punched tags (hole + notch) leaning on the dark slab.
+                Hover straightens the tag and lifts it off the page. */}
+            <ButtonLink
+              href="#projects"
+              className="relative rotate-[3deg] rounded-md border-2 border-forest bg-orange px-6 pl-7 font-display text-base uppercase tracking-wide text-forest shadow-[6px_7px_0_0_rgba(0,0,0,0.35)] transition-all duration-200 hover:rotate-0 hover:shadow-[3px_4px_0_0_rgba(0,0,0,0.35)] sm:text-lg"
+            >
+              {/* Punched hole */}
+              <span
+                aria-hidden="true"
+                className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-forest"
+              />
+              View My Work
+              <span
+                aria-hidden="true"
+                className="ml-1.5 inline-block text-[0.85em] leading-none"
+              >
+                ↓
+              </span>
+            </ButtonLink>
+            <ButtonLink
+              href="#contact"
+              className="relative -rotate-[3deg] rounded-md border-2 border-forest bg-orange px-6 pl-7 font-display text-base uppercase tracking-wide text-forest shadow-[6px_7px_0_0_rgba(0,0,0,0.35)] transition-all duration-200 hover:rotate-0 hover:shadow-[3px_4px_0_0_rgba(0,0,0,0.35)] sm:text-lg"
+            >
+              <span
+                aria-hidden="true"
+                className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-forest"
+              />
               Contact Me
+              <span
+                aria-hidden="true"
+                className="ml-1.5 inline-block text-[0.85em] leading-none"
+              >
+                ↓
+              </span>
             </ButtonLink>
           </div>
         </div>
