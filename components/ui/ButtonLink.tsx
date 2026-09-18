@@ -9,7 +9,16 @@ type ButtonVariant =
   | "highlight";
 
 interface ButtonLinkProps {
-  href: string;
+  /**
+   * Destination URL.
+   *
+   * Pass `null` when the CTA has no destination — the component then renders
+   * a genuinely disabled `<button type="button" disabled>` instead of a link:
+   * not clickable, not focusable, and announced as unavailable by screen
+   * readers. Used by the project card's "Live Demo" button, whose URL is
+   * supplied by the data source (Contentful later) and may be absent.
+   */
+  href: string | null;
   children: ReactNode;
   /** "primary" = solid orange CTA; "secondary" = forest outline (light bg);
    *  "outline-light" = canvas outline (dark bg);
@@ -44,9 +53,24 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 /**
+ * Muted, non-interactive treatment for a CTA that has no destination.
+ *
+ * Only `cursor-not-allowed` and `opacity-50` are added — never a background
+ * or text colour — so these can never collide with the variant's own
+ * utilities (Tailwind resolves same-property conflicts by stylesheet order,
+ * not by class order; see the note on `baseClasses` above). `min-h-11` from
+ * `baseClasses` still applies, so a disabled button keeps the same height as
+ * its enabled siblings and the action row never shifts.
+ */
+const disabledClasses = "cursor-not-allowed opacity-50";
+
+/**
  * Anchored/styled CTA link. Renders a Next.js `Link` for internal routes
  * and a plain anchor with `target="_blank"` for external URLs.
  * Always keeps a minimum 44px touch target (`min-h-11`).
+ *
+ * With `href={null}` it renders a disabled `<button>` instead — see the
+ * `href` prop docs.
  */
 export function ButtonLink({
   href,
@@ -89,6 +113,23 @@ export function ButtonLink({
   ) : (
     children
   );
+
+  /* No destination → a real disabled button. Rendering `<button disabled>`
+     rather than an anchor without an href is what makes it genuinely
+     non-clickable and non-focusable, and gets it announced as unavailable.
+     `onClick` is deliberately not wired up. */
+  if (href === null) {
+    return (
+      <button
+        type="button"
+        disabled
+        className={cn(classes, disabledClasses)}
+        aria-label={ariaLabel}
+      >
+        {content}
+      </button>
+    );
+  }
 
   if (external) {
     return (

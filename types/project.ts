@@ -19,9 +19,24 @@ export interface ProjectChallenge {
   body: string;
 }
 
+/**
+ * External links for a project.
+ *
+ * Both fields are **required but nullable** on purpose. The data source —
+ * `data/projects.ts` today, Contentful later — must always state whether a
+ * link exists, with `null` meaning "this project has no public demo / repo".
+ *
+ * The UI depends on that distinction: the project card always renders a
+ * "Live Demo" button and switches it between clickable (URL present) and
+ * disabled (URL `null`). If the field were merely optional, a source that
+ * forgot to send it would be indistinguishable from "no demo available",
+ * and the button would silently render in the wrong state.
+ */
 export interface ProjectLinks {
-  demo?: string;
-  github?: string;
+  /** Live, deployed demo URL — `null` when the project has no public demo */
+  demo: string | null;
+  /** Public source repository URL — `null` when the repo isn't public */
+  github: string | null;
 }
 
 export interface Project {

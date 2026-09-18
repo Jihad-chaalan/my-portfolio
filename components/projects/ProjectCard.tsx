@@ -72,18 +72,28 @@ export function ProjectCard({ project }: ProjectCardProps) {
           ))}
         </ul>
 
-        <div className="mt-auto flex flex-wrap items-center gap-3 pt-1">
+        {/* Actions: "View Details" holds the left edge, "Live Demo" the right.
+            Live Demo is always rendered — the demo URL comes from the data
+            source, and when it's `null` the button renders disabled instead of
+            disappearing, so every card presents the same actions. The optional
+            GitHub link sits beside Live Demo and, being absent everywhere
+            today, keeps the row to exactly those two buttons. */}
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-1">
           <ButtonLink href={href}>View Details</ButtonLink>
-          {project.links.demo ? (
+          <div className="flex flex-wrap items-center gap-3">
+            {project.links.github ? (
+              <ButtonLink
+                href={project.links.github}
+                external
+                variant="secondary"
+              >
+                GitHub
+              </ButtonLink>
+            ) : null}
             <ButtonLink href={project.links.demo} external variant="secondary">
               Live Demo
             </ButtonLink>
-          ) : null}
-          {project.links.github ? (
-            <ButtonLink href={project.links.github} external variant="secondary">
-              GitHub
-            </ButtonLink>
-          ) : null}
+          </div>
         </div>
       </div>
     </article>

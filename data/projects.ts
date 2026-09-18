@@ -79,7 +79,9 @@ export const projects: Project[] = [
       alt: "Abstract diagram representing a secure multi-tenant retrieval-augmented generation system",
     },
     screenshots: [],
-    links: {},
+    /* No public demo yet — `null` (not omission) is what tells the card to
+       render a disabled "Live Demo" button. */
+    links: { demo: null, github: null },
     featured: true,
   },
   {
@@ -148,7 +150,8 @@ export const projects: Project[] = [
       alt: "Abstract diagram representing an automated AI news research and publishing pipeline",
     },
     screenshots: [],
-    links: {},
+    /* No public demo yet — see the note on the first project. */
+    links: { demo: null, github: null },
     featured: true,
   },
   {
@@ -213,7 +216,8 @@ export const projects: Project[] = [
       alt: "Abstract candlestick chart with an orange alert marker representing a market monitoring script",
     },
     screenshots: [],
-    links: {},
+    /* No public demo yet — see the note on the first project. */
+    links: { demo: null, github: null },
     featured: false,
   },
 ];
