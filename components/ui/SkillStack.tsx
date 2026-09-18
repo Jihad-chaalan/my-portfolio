@@ -169,13 +169,15 @@ export function SkillStack({ categories }: { categories: SkillCategory[] }) {
               <p className="mt-6 max-w-sm text-base leading-relaxed text-forest/75 sm:max-w-md sm:text-lg lg:text-xl">
                 {category.description}
               </p>
-              {/* Skill items - small chips below the description */}
-
-              <div className="flex flex-wrap gap-2 pt-4">
+              {/* Skill items — the same "stamped plate" style as the
+                  Technologies & Deployment tool wall on project pages:
+                  forest border, canvas fill, orange offset shadow,
+                  alternating tilt, straightens + flips to orange on hover. */}
+              <div className="flex flex-wrap gap-3 pt-4">
                 {category.items.map((item, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-1 rounded-full border border-forest/20 bg-forest/5 px-3 py-1.5 text-base text-forest/75 font-medium"
+                    className={`${i % 2 === 0 ? "-rotate-2" : "rotate-2"} inline-flex items-center rounded-md border-2 border-forest bg-canvas px-4 py-2 font-display text-sm uppercase tracking-wide text-forest shadow-[3px_3px_0_0_var(--color-orange)] transition-all duration-200 hover:rotate-0 hover:bg-orange hover:text-forest hover:shadow-[3px_3px_0_0_var(--color-forest)]`}
                   >
                     {item}
                   </span>

@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { ProjectGallery } from "@/components/projects/ProjectGallery";
 import { ProjectDetailReveal } from "@/components/projects/ProjectDetailReveal";
@@ -72,8 +73,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <main id="main-content">
       <article>
-        <header className="relative mx-auto w-full max-w-6xl px-4 pb-10 pt-32 sm:px-6 sm:pt-40 lg:px-8">
         {/* Editorial title block */}
+        <header className="relative mx-auto w-full max-w-6xl px-4 pb-10 pt-28 sm:px-6 sm:pt-36 lg:px-8">
+          {/* Breadcrumb row — the standard home for a back link: aligned
+              with the content edge, directly above the title's meta row */}
+          <Link
+            href="/#projects"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-forest/50 transition-colors duration-200 hover:text-orange"
+          >
+            <span aria-hidden="true" className="text-orange">←</span>
+            All Projects
+          </Link>
           <div className="flex items-center gap-4">
             <span aria-hidden="true" className="h-0.5 w-10 bg-orange" />
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-forest/70">
