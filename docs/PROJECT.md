@@ -36,7 +36,7 @@ Three real projects are documented (see `data/projects.ts` for the full normaliz
 
 1. **Secure Multi-Tenant RAG** (`secure-multi-tenant-rag`) — a production-oriented, multi-tenant RAG platform: FastAPI backend, hybrid search (BM25 + vector) with reranking, RBAC, Google Drive ingestion, and an AI firewall layer.
 2. **AI Daily News** (`ai-daily-news`) — an automated AI agent system (not a news website) that researches, summarizes, evaluates, and publishes news daily, using LangGraph for multi-step orchestration, with a web interface and daily notifications.
-3. **Resume ATS Predictor** (`resume-ats-predictor`) — an XGBoost machine learning model trained on approximately 6,000 resumes to predict ATS-style resume outcomes, deployed behind a simple interface.
+3. **Crypto Futures Alert** (`crypto-futures-alert`) — an automated Python script that monitors Binance USDT perpetual futures and sends Telegram alerts when predefined market conditions are met.
 
 No statistics, clients, users, or outcomes are invented beyond what is stated above and in the project data.
 

@@ -152,56 +152,65 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    slug: "resume-ats-predictor",
-    name: "Resume ATS Predictor",
-    category: "Machine Learning",
+    slug: "crypto-futures-alert",
+    name: "Crypto Futures Alert",
+    category: "Automation / Market Monitoring",
     tagline:
-      "An XGBoost model that predicts how well a resume is likely to perform against ATS-style screening.",
+      "An automated Python script that watches Binance USDT perpetual futures and sends a Telegram alert as soon as a predefined market condition is met.",
     summary:
-      "A machine learning system trained on approximately 6,000 resumes to predict ATS-style resume outcomes, deployed so resumes can be analyzed and scored through a simple interface.",
+      "Crypto Futures Alert is an automated market-monitoring script built around Binance USDT perpetual futures. It continuously checks the market against a set of predefined conditions and pushes a Telegram notification whenever one of them is met, so conditions are watched without anyone having to sit in front of a chart.",
     overview:
-      "Resume ATS Predictor is a machine learning project focused on predicting how an Applicant Tracking System might screen a given resume. It was trained on a dataset of approximately 6,000 resumes and deployed so resumes can be analyzed through a simple interface rather than staying a notebook-only experiment.",
+      "Crypto Futures Alert is a small, focused automation project: a Python script that monitors Binance USDT perpetual futures and reports back through Telegram when predefined market conditions are met. Its job is to remove manual price-watching — the condition checking runs on its own, and the alert reaches a channel that is actually looked at.",
     problem:
-      "Many job seekers have no visibility into how ATS software might screen their resume before a human ever sees it. Turning this into a useful tool required moving beyond a one-off analysis script into a trained, reusable model that could be deployed and queried on new resumes.",
+      "Markets move whether or not anyone is watching, and the moments worth knowing about rarely happen while someone happens to be in front of a chart. Checking prices by hand is unreliable, and doing it across more than a symbol or two stops being realistic. A full trading platform with a built-in alerting stack, on the other hand, is far more machinery than the problem needs.",
     solution:
-      "Resume text and structured features were extracted and processed, then used to train a gradient-boosted model (XGBoost) on a dataset of roughly 6,000 resumes to predict ATS-style outcomes. The trained model was packaged and deployed behind an interface so new resumes can be submitted and scored without retraining or manual analysis.",
+      "The script connects to Binance USDT perpetual futures market data and evaluates the incoming values against a set of predefined conditions. When a condition is met, it composes an alert and delivers it through a Telegram bot, so the notification arrives on a device that is already part of daily use. The whole thing runs unattended — there is no dashboard to remember to open.",
     architecture:
-      "Resume data is parsed and converted into structured features suitable for a tabular ML model. An XGBoost classifier/regressor is trained on the processed dataset, evaluated, and serialized. A deployment layer loads the trained model and exposes it so a resume can be submitted and scored through a simple interface.",
+      "A Python process runs the monitoring loop: it pulls market data for Binance USDT perpetual futures, evaluates the incoming values against the predefined conditions, and — when one is satisfied — hands the alert to the Telegram delivery step, which sends the message to the configured chat. Because the conditions are predefined rather than inferred, what the script will and will not alert on is known in advance.",
     keyFeatures: [
-      "Resume text parsing and feature extraction",
-      "XGBoost model trained on ~6,000 resumes",
-      "ATS-style outcome prediction for a submitted resume",
-      "Deployed model accessible through a simple interface",
+      "Automated Python script that runs the market check unattended",
+      "Monitors Binance USDT perpetual futures market data",
+      "Evaluates incoming values against predefined market conditions",
+      "Sends a Telegram alert as soon as a condition is met",
+      "Predefined conditions, so alert behaviour is predictable rather than inferred",
+      "No dashboard required — notifications arrive in Telegram",
     ],
-    technologies: ["Python", "XGBoost", "Machine Learning", "Resume Parsing", "Model Deployment"],
+    technologies: [
+      "Python",
+      "Binance Futures API",
+      "USDT Perpetual Futures",
+      "Telegram Bot API",
+      "Market Monitoring",
+      "Automation",
+    ],
     challenges: [
       {
-        title: "Turning unstructured resumes into usable features",
+        title: "Watching the market continuously, not on demand",
         body:
-          "Resumes vary widely in format and structure. Extracting consistent, useful features from free-form resume text was necessary before any model could be trained on the data.",
+          "The whole value of an alerting script is that it keeps running when nobody is looking. The check has to cycle against live Binance USDT perpetual futures data on its own, without depending on a person opening a terminal at the right moment.",
       },
       {
-        title: "Choosing a model suited to tabular resume features",
+        title: "Defining conditions precisely enough to be trusted",
         body:
-          "XGBoost was chosen for its strength on structured/tabular data extracted from resumes, rather than defaulting to a deep learning approach that would need far more data than the ~6,000 resumes available.",
+          "A condition that is loosely defined either fires constantly or never fires at all. The conditions had to be pinned down clearly enough that an alert actually means the market did the thing it was supposed to signal.",
       },
       {
-        title: "Deploying beyond a notebook",
+        title: "Routing the alert somewhere it will be seen",
         body:
-          "The trained model was packaged and deployed behind an interface so it could be used on new resumes directly, instead of remaining a one-off training script.",
+          "An alert that only prints to a console is easy to miss. Delivering notifications through Telegram puts the signal into a client that is already part of daily use, on phone and desktop alike.",
       },
     ],
     outcomes: [
-      "A trained XGBoost model built on a dataset of approximately 6,000 resumes",
-      "A deployed interface for scoring new resumes against the trained model",
+      "A Python monitor running against Binance USDT perpetual futures",
+      "Telegram alerts delivered when predefined market conditions are met",
     ],
     image: {
-      src: "/images/projects/ats-card.svg",
-      alt: "Abstract chart representing a machine learning model scoring resumes",
+      src: "/images/projects/crypto-card.svg",
+      alt: "Abstract candlestick chart with an orange alert marker representing a market monitoring script",
     },
     heroImage: {
-      src: "/images/projects/ats-hero.svg",
-      alt: "Abstract chart representing a machine learning model scoring resumes",
+      src: "/images/projects/crypto-hero.svg",
+      alt: "Abstract candlestick chart with an orange alert marker representing a market monitoring script",
     },
     screenshots: [],
     links: {},

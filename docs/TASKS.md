@@ -8,7 +8,7 @@ Tracks implementation progress for the portfolio rebuild. Update this file at th
 - [x] Read the bundled Next.js 16 docs (`node_modules/next/dist/docs`) for project structure, fonts, images, CSS, metadata, and linking conventions before writing code (per `AGENTS.md`).
 - [x] Created folder structure: `components/{layout,ui,sections,projects}`, `data/`, `types/`, `lib/`, `docs/`, `public/images/projects/`.
 - [x] Defined the normalized `Project` type (`types/project.ts`) and `SkillCategory` type (`types/skill.ts`), plus barrel export (`types/index.ts`).
-- [x] Created local static data: `data/projects.ts` (Secure Multi-Tenant RAG, AI Daily News, Resume ATS Predictor — no invented stats) and `data/skills.ts` (AI Engineering, Full-Stack Development, DevOps & Deployment).
+- [x] Created local static data: `data/projects.ts` (Secure Multi-Tenant RAG, AI Daily News, Crypto Futures Alert — no invented stats) and `data/skills.ts` (AI Engineering, Full-Stack Development, DevOps & Deployment).
 - [x] Created the repository seam: `lib/project-repository.ts`, `lib/skills-repository.ts` (async functions; UI must call these, never `data/*` directly).
 - [x] Created `lib/site.ts` (site identity, nav links, contact/booking links).
 - [x] Set up all four fonts via `next/font/google` in `app/layout.tsx`: Manrope, Shrikhand, Bungee, and Archivo Black (temporary stand-in for the licensed Bowlby One SC).
@@ -44,19 +44,34 @@ Tracks implementation progress for the portfolio rebuild. Update this file at th
 - [x] Composed all four sections in `app/page.tsx` (Hero → Skills → Projects → Contact inside `main#main-content`), replacing the Task 1 checkpoint placeholder.
 - [x] Verified: `npm run lint` (clean), `npx tsc --noEmit` (clean), `npm run build` (clean). Inspected generated `index.html`: all four section IDs present, all three project cards (name + tagline + features + chips + View Details → `/projects/[slug]`), contact CTA + message, and "Book a Call" all render server-side.
 
-## Task 3.5 — Styling Improvements ⏳ In progress (subtask by subtask)
+## Task 3.5 — Styling Improvements ✅ Complete
 
 **Working rule:** We go through these one at a time (header → hero → skills → projects → contact), and **none are marked complete until the user reviews and confirms each one**.
 
-> No subtask below is done yet — each will become `[x]` only after the user explicitly approves the styling of that section.
+> All subtasks below are `[x]` — each was reviewed and approved by the user before being marked complete.
 
 - [x] **Improve header (navbar) styling** — flat rounded forest-green pill, same width as the hero box (small margins only), no borders/rings; nav links About/Skills/Projects/Contact + Book a Call. **User confirmed.**
 - [x] **Improve Hero section styling** — wide rounded forest-green box with small margins (matches navbar width), no borders; large rectangular photo (~half the hero width, tall) on the left, "Hey, I'm Jihad Chaalan / Full-Stack AI Engineer" + CTAs on the right. **User confirmed.**
 - [x] **Improve Skills section styling** — section header with the orange highlighter-marker "Skills" title (Book a Call treatment); three alternating left/right white cards (85% width, 340px min-height) with GSAP-owned tilts (-1.2° / +2.8° / -1.2°), 25px gaps, corner overlaps, content vertically centered, and scroll-scrubbed reveal (fade + 100px rise) with a pause between boxes, reversible on scroll-up. **User confirmed.**
 - [x] **Improve Projects section styling** — rebuilt as a responsive showcase. Desktop (lg+): pinned one-at-a-time GSAP scroll sequence — highlighted title column fixed left, each card glides into a stage spot centered in the area right of the title (per-card lifecycle timelines: entrance → hold → yield; gentle 0.6-viewport slides, 0.8-viewport spacing), 720px cards with height-capped 16:9 images, rounded-2xl + soft forest shadow. Below lg: pure-CSS swipe carousel (scroll-snap, one card per snap, constant height for any number of projects) with a "Swipe to explore" hint. Breakpoint owned by `gsap.matchMedia` (clean teardown/rebuild on resize). **User confirmed (desktop + mobile).**
-- [ ] **Improve Contact section styling** — refine the final CTA block: forest-background composition, heading, message, button arrangement and spacing, and the link row.
+- [x] **Improve Contact section styling** — compact two-column composition on the forest slab (narrower side margins via `Container wide`, large column gap): **left** = "HAVE A PROJECT IN MIND?" in large caps over the orange highlighter-marker "LET'S BUILD IT", then phone (`tel:`) and email (`mailto:`) icon rows and LinkedIn/GitHub icon buttons; **right** = the paper-styled form — a tilted white sheet with orange tape strips, torn bottom edge, dog-eared corner, ruled lines in the message box and underline-style fields, which straightens on focus and submits through Web3Forms (with a mailto fallback when no access key is configured). **User confirmed.**
 
-## Task 4 — Project Pages ⏳ Not started
+## Task 3.6 — Hero Page-Load Intro ⏳ Awaiting user confirmation
+
+- [x] `components/sections/HeroIntro.tsx` — page-load intro built on a single `gsap.timeline()`: a full-screen forest overlay (`z-[999]`) whose centred Shrikhand glyph walks the name **one letter at a time in name order** (J → I → H → A → D → ⟨beat⟩ → C → H → A → A → L → A → N, no random decoy letters), then the overlay shrinks into the real hero's **live-measured** rect (`power3.inOut`, function-based values so late font swaps can't skew it) and hands off invisibly; the page then reveals in staggered stages (nav + wordmark + eyebrow → headline → paragraph + chips → CTAs with the primary inking from muted to full orange, and the portrait springing in from bottom-left with `back.out(1.7)`).
+- [x] Targets found via `data-intro` attributes on the existing Hero/Navbar elements, so content stays single-sourced; the component receives only the `wordmark` text (`siteConfig.name`).
+- [x] Guards: plays once per page load (module flag — resets on reload, survives SPA navigations), skipped entirely under `prefers-reduced-motion` (overlay also `motion-reduce:hidden`), `gsap.context` cleanup on unmount.
+- [x] Scroll is deliberately **never locked** — the scrollbar stays visible from first paint, so the layout viewport width never changes and neither the page content nor the `fixed` navbar shifts when the intro ends.
+- [ ] Visual confirmation of the intro (letter size/pacing) and of the no-shift fix.
+
+## Task 3.7 — Project Content Swap ⏳ Awaiting user confirmation
+
+- [x] Replaced the **Resume ATS Predictor** project with **Crypto Futures Alert** (`crypto-futures-alert`, category "Automation / Market Monitoring") across `data/projects.ts`, describing an automated Python script that monitors Binance USDT perpetual futures and sends Telegram alerts when predefined market conditions are met. No statistics, users, or outcomes invented.
+- [x] New palette-matched placeholder imagery: `public/images/projects/crypto-card.svg` (1200×800) and `crypto-hero.svg` (1600×900) — abstract candlestick chart with an orange alert marker. Old `ats-card.svg` / `ats-hero.svg` deleted.
+- [x] Updated `docs/PROJECT.md` §Projects and the Task 1 data record in this file so no doc references the removed project.
+- [ ] User review of the new card text and placeholder imagery.
+
+## Task 4 — Project Pages ⛔ Do not start until the user says so
 
 - [ ] `app/projects/[slug]/page.tsx` with `generateStaticParams` + `generateMetadata` (page content must add top spacing so it clears the fixed navbar pill).
 - [ ] `components/projects/ProjectDetail.tsx` and subsections (Overview, Architecture, Key Features, Tech Stack, Challenges, Outcomes, Screenshots).
