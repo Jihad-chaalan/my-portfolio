@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { ProjectGallery } from "@/components/projects/ProjectGallery";
@@ -14,8 +14,8 @@ import { siteConfig } from "@/lib/site";
  *
  * Content order follows the brief: title, small description, a
  * click-through image gallery (whatever number of images the data source
- * provides — no fixed count), then Problem, Overview (how it works /
- * details), Solution, and Technologies & Deployment.
+ * provides — no fixed count), then Problem, Solution, Overview (how it
+ * works / details), and Technologies & Deployment.
  *
  * The project data comes from the repository (`lib/project-repository`),
  * so when Contentful is integrated in Phase 2 only the repository bodies
@@ -72,30 +72,24 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <main id="main-content">
       <article>
-        {/* ── Hero: full-bleed forest slab, canvas display type ─────── */}
-        <header className="relative bg-forest">
-          {/* Flat orange edge — color blocking, not a gradient (DESIGN.md) */}
-          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1.5 bg-orange" />
-          <div className="mx-auto w-full max-w-6xl px-4 pb-14 pt-32 sm:px-6 sm:pt-36 lg:px-8">
-            <p
-              data-reveal
-              className="text-sm font-semibold uppercase tracking-[0.18em] text-canvas/70"
-            >
+        <header className="relative mx-auto w-full max-w-6xl px-4 pb-10 pt-32 sm:px-6 sm:pt-40 lg:px-8">
+        {/* Editorial title block */}
+          <div className="flex items-center gap-4">
+            <span aria-hidden="true" className="h-0.5 w-10 bg-orange" />
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-forest/70">
               {project.category}
             </p>
-            <h1
-              data-reveal
-              className="mt-4 font-display text-4xl uppercase leading-[0.95] tracking-tight text-canvas sm:text-6xl lg:text-7xl"
-            >
-              {project.name}
-            </h1>
-            <p
-              data-reveal
-              className="mt-6 max-w-3xl text-lg leading-relaxed text-canvas/80 sm:text-xl"
-            >
+          </div>
+          <h1 className="mt-5 font-display text-[11vw] uppercase leading-[0.95] tracking-tight text-forest sm:text-7xl lg:text-8xl">
+            {project.name}
+          </h1>
+          {/* Orange underline stroke � a marker swash under the title */}
+          <div aria-hidden="true" className="mt-2 h-3 w-40 -rotate-1 bg-orange sm:w-64" />
+          <div className="mt-8 flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
+            <p className="max-w-2xl text-lg leading-relaxed text-forest/80 sm:text-xl">
               {project.tagline}
             </p>
-            <div data-reveal className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="flex shrink-0 flex-wrap items-center gap-3">
               <ButtonLink href={project.links.demo} external variant="highlight">
                 Live Demo
               </ButtonLink>
@@ -103,7 +97,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <ButtonLink
                   href={project.links.github}
                   external
-                  variant="outline-light"
+                  variant="secondary"
                 >
                   GitHub
                 </ButtonLink>
@@ -112,175 +106,152 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </header>
 
-        <ProjectDetailReveal className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <ProjectDetailReveal className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          {/* The journey line � runs behind the whole story, stages hang off it */}
+          <div
+            aria-hidden="true"
+            className="absolute bottom-0 left-[27px] top-0 w-1 bg-forest/10 sm:left-[35px]"
+          />
 
-          {/* ── Image gallery (variable count, click to switch) ───────── */}
-          <div data-reveal className="-mt-6 pt-10">
+          {/* ==== Taped-photo gallery (image style kept) ==== */}
+          <div data-reveal className="relative pl-16 sm:pl-24">
+            <span
+              aria-hidden="true"
+              className="absolute left-[19px] top-14 z-10 h-4 w-4 rotate-45 bg-orange sm:left-[27px] sm:h-5 sm:w-5"
+            />
             <ProjectGallery
               images={galleryImages}
               projectName={project.name}
             />
           </div>
 
-          {/* ── Problem ───────────────────────────────────────────────── */}
+
+          {/* ==== Stage 01 � The Problem (white paper card) ==== */}
           <section
             aria-labelledby="project-problem"
             data-reveal
-            className="mt-16 rounded-2xl border border-forest/10 bg-surface p-6 skill-card-shadow sm:p-10"
+            className="relative mt-24 pl-16 sm:pl-24"
           >
-            <p
+            <span
               aria-hidden="true"
-              className="font-display text-5xl leading-none text-orange"
+              className="absolute left-[19px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
             >
-              01
-            </p>
-            <h2
-              id="project-problem"
-              className="mt-3 font-sub text-2xl uppercase text-forest sm:text-3xl"
-            >
-              The Problem
-            </h2>
-            <p className={`mt-4 ${proseClasses}`}>{project.problem}</p>
+              <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
+            </span>
+            <p className="font-display text-6xl leading-none text-forest/15 sm:text-8xl">01</p>
+            <div className="-mt-4 max-w-3xl -rotate-[0.4deg] border border-forest/10 bg-surface p-6 shadow-[5px_7px_0_0_var(--color-forest)] sm:p-9">
+              <h2 id="project-problem" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
+                The Problem
+              </h2>
+              <p className={`mt-4 ${proseClasses}`}>{project.problem}</p>
+            </div>
           </section>
 
-          {/* ── Overview / how it works ───────────────────────────────── */}
-          <section
-            aria-labelledby="project-overview"
-            data-reveal
-            className="mt-8 rounded-2xl border border-forest/10 bg-surface p-6 skill-card-shadow sm:p-10"
-          >
-            <p
-              aria-hidden="true"
-              className="font-display text-5xl leading-none text-orange"
-            >
-              02
-            </p>
-            <h2
-              id="project-overview"
-              className="mt-3 font-sub text-2xl uppercase text-forest sm:text-3xl"
-            >
-              Overview
-            </h2>
-            <p className={`mt-4 ${proseClasses}`}>{project.overview}</p>
-
-            <h3 className="mt-8 font-sub text-xl uppercase text-forest">
-              How it works
-            </h3>
-            <p className={`mt-3 ${proseClasses}`}>{project.architecture}</p>
-
-            <h3 className="mt-8 font-sub text-xl uppercase text-forest">
-              Key features
-            </h3>
-            <ul className="mt-3 flex flex-col gap-2">
-              {project.keyFeatures.map((feature) => (
-                <li
-                  key={feature}
-                  className="flex items-baseline gap-2 text-base text-forest/85 sm:text-lg"
-                >
-                  <span aria-hidden="true" className="text-orange">
-                    →
-                  </span>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-
-
-          {/* ── Solution ──────────────────────────────────────────────── */}
+          {/* ==== Stage 03 � The Solution (dark forest story beat) ==== */}
           <section
             aria-labelledby="project-solution"
             data-reveal
-            className="mt-8 rounded-2xl border border-forest/10 bg-surface p-6 skill-card-shadow sm:p-10"
+            className="relative mt-20 pl-16 sm:pl-24"
           >
-            <p
+            <span
               aria-hidden="true"
-              className="font-display text-5xl leading-none text-orange"
+              className="absolute left-[19px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
             >
-              03
-            </p>
-            <h2
-              id="project-solution"
-              className="mt-3 font-sub text-2xl uppercase text-forest sm:text-3xl"
+              <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
+            </span>
+            <p className="font-display text-6xl leading-none text-orange/80 sm:text-8xl">02</p>
+            <div className="-mt-4 max-w-3xl -rotate-[0.4deg] rounded-2xl bg-forest p-6 shadow-[6px_8px_0_0_var(--color-orange)] sm:p-9">
+              <h2 id="project-solution" className="font-sub text-2xl uppercase text-canvas sm:text-3xl">
+                The Solution
+              </h2>
+              <p className={`mt-4 ${proseClasses} !text-canvas/85`}>{project.solution}</p>
+              {project.challenges.length > 0 ? (
+                <>
+                  <h3 className="mt-8 font-sub text-lg uppercase text-canvas">
+                    Challenges &amp; decisions
+                  </h3>
+                  <ul className="mt-3 flex flex-col gap-4">
+                    {project.challenges.map((challenge) => (
+                      <li key={challenge.title} className="rounded-xl border border-canvas/20 bg-canvas/10 p-5">
+                        <h4 className="font-semibold text-canvas">{challenge.title}</h4>
+                        <p className="mt-1 text-sm leading-relaxed text-canvas/75">{challenge.body}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
+            </div>
+          </section>
+          {/* ==== Stage 02 � Overview / how it works (white paper card) ==== */}
+          <section
+            aria-labelledby="project-overview"
+            data-reveal
+            className="relative mt-20 pl-16 sm:pl-24"
+          >
+            <span
+              aria-hidden="true"
+              className="absolute left-[19px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
             >
-              The Solution
-            </h2>
-            <p className={`mt-4 ${proseClasses}`}>{project.solution}</p>
-            {project.challenges.length > 0 ? (
-              <>
-                <h3 className="mt-8 font-sub text-xl uppercase text-forest">
-                  Challenges & decisions
-                </h3>
-                <ul className="mt-3 flex flex-col gap-4">
-                  {project.challenges.map((challenge) => (
-                    <li
-                      key={challenge.title}
-                      className="rounded-xl border border-forest/10 bg-canvas p-5"
-                    >
-                      <h4 className="font-semibold text-forest">
-                        {challenge.title}
-                      </h4>
-                      <p className="mt-1 text-sm leading-relaxed text-forest/75">
-                        {challenge.body}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            ) : null}
+              <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
+            </span>
+            <p className="font-display text-6xl leading-none text-forest/15 sm:text-8xl">03</p>
+            <div className="-mt-4 max-w-3xl rotate-[0.4deg] border border-forest/10 bg-surface p-6 shadow-[5px_7px_0_0_var(--color-forest)] sm:p-9">
+              <h2 id="project-overview" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
+                Overview
+              </h2>
+              <p className={`mt-4 ${proseClasses}`}>{project.overview}</p>
+
+              <h3 className="mt-8 font-sub text-lg uppercase text-forest">How it works</h3>
+              <p className={`mt-3 ${proseClasses}`}>{project.architecture}</p>
+
+              <h3 className="mt-8 font-sub text-lg uppercase text-forest">Key features</h3>
+              <ul className="mt-3 flex flex-col gap-2">
+                {project.keyFeatures.map((feature) => (
+                  <li key={feature} className="flex items-baseline gap-2 text-base text-forest/85 sm:text-lg">
+                    <span aria-hidden="true" className="text-orange">?</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+
+          {/* ==== Stage 04 — Technologies & Deployment (tool wall) ==== */}
+          <section
+            aria-labelledby="project-tech"
+            data-reveal
+            className="relative mt-20 pl-16 pb-24 sm:pl-24"
+          >
+            <span
+              aria-hidden="true"
+              className="absolute left-[19px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
+            >
+              <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
+            </span>
+            <p className="font-display text-6xl leading-none text-forest/15 sm:text-8xl">04</p>
+            <div className="-mt-4 max-w-3xl rotate-[0.4deg] border border-forest/10 bg-surface p-6 shadow-[5px_7px_0_0_var(--color-forest)] sm:p-9">
+              <h2 id="project-tech" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
+                Technologies &amp; Deployment
+              </h2>
+              {/* Tool wall: each tech is a stamped plate on the card —
+                  alternating tilt, orange flip on hover, CSS only */}
+              <ul className="mt-6 flex flex-wrap gap-3">
+                {project.technologies.map((tech, i) => (
+                  <li
+                    key={tech}
+                    className={`${i % 2 === 0 ? "-rotate-2" : "rotate-2"} rounded-md border-2 border-forest bg-canvas px-4 py-2 font-display text-sm uppercase tracking-wide text-forest shadow-[3px_3px_0_0_var(--color-orange)] transition-all duration-200 hover:rotate-0 hover:bg-orange hover:text-forest hover:shadow-[3px_3px_0_0_var(--color-forest)]`}
+                  >
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-7 text-base leading-relaxed text-forest/85 sm:text-lg">
+                {project.outcomes.join(" ")}
+              </p>
+            </div>
           </section>
         </ProjectDetailReveal>
-
-        {/* ── Technologies & deployment: full-bleed forest band ─────── */}
-        <section
-          aria-labelledby="project-tech"
-          className="relative mt-16 bg-forest"
-        >
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-1.5 bg-orange"
-          />
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-            <h2
-              id="project-tech"
-              className="font-sub text-2xl uppercase text-canvas sm:text-3xl"
-            >
-              Technologies & Deployment
-            </h2>
-            <ul className="mt-6 flex flex-wrap gap-2.5">
-              {project.technologies.map((tech) => (
-                <li
-                  key={tech}
-                  className="rounded-full border border-canvas/30 px-4 py-1.5 text-sm font-medium text-canvas"
-                >
-                  {tech}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 max-w-3xl text-base leading-relaxed text-canvas/80 sm:text-lg">
-              {project.outcomes.join(" ")}
-            </p>
-
-            <div className="mt-10 flex flex-wrap items-center gap-3">
-              <ButtonLink href={project.links.demo} external variant="highlight">
-                Live Demo
-              </ButtonLink>
-              {project.links.github ? (
-                <ButtonLink
-                  href={project.links.github}
-                  external
-                  variant="outline-light"
-                >
-                  GitHub
-                </ButtonLink>
-              ) : null}
-              <ButtonLink href="/" variant="outline-light">
-                ← Back to Projects
-              </ButtonLink>
-            </div>
-          </div>
-        </section>
       </article>
     </main>
   );
