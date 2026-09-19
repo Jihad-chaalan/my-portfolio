@@ -71,11 +71,24 @@ Tracks implementation progress for the portfolio rebuild. Update this file at th
 - [x] Updated `docs/PROJECT.md` §Projects and the Task 1 data record in this file so no doc references the removed project.
 - [ ] User review of the new card text and placeholder imagery.
 
-## Task 4 — Project Pages ⛔ Do not start until the user says so
+## Task 4 — Project Pages ⏳ Built, awaiting user confirmation
 
-- [ ] `app/projects/[slug]/page.tsx` with `generateStaticParams` + `generateMetadata` (page content must add top spacing so it clears the fixed navbar pill).
-- [ ] `components/projects/ProjectDetail.tsx` and subsections (Overview, Architecture, Key Features, Tech Stack, Challenges, Outcomes, Screenshots).
-- [ ] Link project cards to their detail pages.
+- [x] `app/projects/[slug]/page.tsx` — statically prerendered per slug (`generateStaticParams` + `generateMetadata`); "build journey" design: editorial title block, back breadcrumb, taped-polaroid gallery, numbered journey-line stages (01 Problem → 02 Solution → 03 Overview → 04 Technologies & Deployment tool wall), gsap one-shot reveals.
+- [x] `components/projects/ProjectGallery.tsx` — variable-count gallery (hero → card image → screenshots), taped-photo style, clickable thumbnails with `aria-pressed`.
+- [x] `components/projects/ProjectDetailReveal.tsx` — shared one-shot reveal wrapper (reduced-motion aware).
+- [x] Hero CTAs as "hang-tag" plates; card actions (View Details / Live Demo) restyled to match; back breadcrumb at top.
+
+## Task 4b — Contentful Integration (Phase 2) ⏳ Live in build, awaiting user's visual check
+
+- [x] `contentful` SDK installed; `next.config.ts` `images.remotePatterns` for `images.ctfassets.net`.
+- [x] `lib/contentful-client.ts` — server-only cached Delivery client; returns `null` when env vars missing.
+- [x] `lib/contentful-mapper.ts` — entry → `Project` / `SkillCategory` normalization (asset `https:` + description→alt, empty URLs → `null`, JSON-array guards).
+- [x] Repositories rewritten (bodies only, same signatures): Contentful when configured, with loud warning + static fallback when unconfigured/unreachable/**0 published entries**. `data/` deliberately kept as the fallback (dev/CI work with no credentials).
+- [x] `.env.example` documented (`CONTENTFUL_SPACE_ID`, `CONTENTFUL_DELIVERY_ACCESS_TOKEN`, `CONTENTFUL_ENVIRONMENT`, plus the script-only `CONTENTFUL_MANAGEMENT_TOKEN`).
+- [x] **`scripts/seed-contentful.ts` + `npm run seed:contentful`** — one-off, idempotent Management-API seeder built on the plain client (`contentful-management` v12; the fluent `getSpace()/getEnvironment()` API is deprecated there). Uploads the 6 placeholder images as assets, then creates + publishes 3 `project` entries and 3 `skillCategory` entries, reading its content straight from `data/projects.ts` / `data/skills.ts`. Re-runs update entries and reuse assets (matched by title) instead of duplicating; never deletes anything.
+- [x] Seed run against the real space: 3 projects + 3 skill categories created and published, 6 assets uploaded; second run confirmed idempotent (all "asset reused" / "entry updated").
+- [x] **Build verified Contentful-powered:** with no fallback warning, all 3 `/projects/*` routes prerendered, and prerendered HTML references `https://images.ctfassets.net/...` with **zero** local `/images/projects/*` paths. Asset descriptions correctly carried through to `alt` text.
+- [ ] User visual check of the Contentful-sourced site; then decide whether to delete `data/` (ARCHITECTURE.md migration step 4) or keep the static fallback permanently.
 
 ## Task 5 — Quality ⏳ Not started
 

@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  images: {
+    // Contentful asset CDN — Project.image/heroImage/screenshots may point
+    // here once data is served from Contentful (Phase 2).
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.ctfassets.net",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
