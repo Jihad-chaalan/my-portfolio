@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/ButtonLink";
@@ -25,19 +25,57 @@ export function Navbar() {
 
   const hrefFor = (href: string) => (isHome ? href : `/${href}`);
 
-  // Scroll-spy: highlight the nav link of the section currently in view.
+  // Scroll-spy: highlight the nav link of the section currently in view, and
+  // keep the URL hash in step with it.
+  //
+  // Syncing the hash is not cosmetic. If the URL keeps saying `#projects`
+  // while you're actually in Contact, clicking "Projects" asks the browser to
+  // jump to the hash it is *already on*, which is a no-op — nav links appear
+  // dead until you click a different section first.
+  //
+  // `replaceState` is the right tool here: it updates the URL without adding
+  // a history entry and without triggering a scroll of its own. Only the home
+  // page has these sections, so the spy (and the hash syncing) is skipped
+  // elsewhere.
   useEffect(() => {
+    if (!isHome) return;
+
     const sections = SECTION_IDS
       .map((id) => document.getElementById(id))
       .filter((element): element is HTMLElement => element !== null);
 
     if (sections.length === 0) return;
 
+    /** Id last written to the URL, and whether the initial callback has run. */
+    let syncedId: string | null = null;
+    let primed = false;
+
     const observer = new IntersectionObserver(
       (entries) => {
+        // IntersectionObserver fires once on observe with the page's starting
+        // state. That first callback must not touch the URL: rewriting it just
+        // because the page loaded would mean a plain refresh lands mid-page
+        // (and the hero intro would play over an already-scrolled page)
+        // instead of at the top. From then on, only an actual change of
+        // section syncs the hash.
+        const isInitialCallback = !primed;
+        primed = true;
+
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveSection(String(entry.target.id));
+          if (!entry.isIntersecting) continue;
+
+          const id = String(entry.target.id);
+          setActiveSection(id);
+
+          if (isInitialCallback || id === syncedId) {
+            syncedId = id;
+            continue;
+          }
+          syncedId = id;
+
+          const hash = `#${id}`;
+          if (window.location.hash !== hash) {
+            window.history.replaceState(null, "", hash);
           }
         }
       },
@@ -47,7 +85,7 @@ export function Navbar() {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [isHome]);
 
   // Close the mobile menu on Escape or when the viewport grows to desktop.
   useEffect(() => {
@@ -64,6 +102,51 @@ export function Navbar() {
       window.removeEventListener("resize", closeOnResize);
     };
   }, []);
+
+  /**
+   * Jump to a homepage section and keep the URL hash truthful.
+   *
+   * Intercepting the click (rather than letting the browser handle it) is what
+   * makes the nav reliable:
+   *  - it scrolls even when the target hash already matches the URL, which a
+   *    plain anchor navigation would treat as a no-op;
+   *  - it re-scrolls when you're already inside that section, so clicking
+   *    "Projects" from the bottom of Projects returns you to its top;
+   *  - `scrollIntoView()` honours `scroll-margin-top` from `globals.css`, so
+   *    the section still clears the fixed navbar pill, and it defers to the
+   *    CSS `scroll-behavior: smooth` (already forced to `auto` under
+   *    `prefers-reduced-motion`).
+   *
+   * `event.preventDefault()` also suppresses Next's own navigation here —
+   * verified against the installed source, where `linkClicked` returns early
+   * on `e.defaultPrevented` (`node_modules/next/dist/client/link.js`). On any
+   * other route we return early instead, so `<Link>` performs the real
+   * navigation back to the homepage section.
+   */
+  const handleSectionClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    if (!isHome) return;
+
+    const id = href.replace(/^#/, "");
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    event.preventDefault();
+    target.scrollIntoView();
+
+    // Mirror a normal in-page anchor click by pushing a history entry, except
+    // when we're already on this hash (clicking the section you're in), where
+    // a duplicate entry would be pointless.
+    if (window.location.hash === href) {
+      window.history.replaceState(null, "", href);
+    } else {
+      window.history.pushState(null, "", href);
+    }
+
+    setActiveSection(id);
+  };
 
   return (
     <header
@@ -83,6 +166,7 @@ export function Navbar() {
                 <li key={link.href}>
                   <Link
                     href={hrefFor(link.href)}
+                    onClick={(event) => handleSectionClick(event, link.href)}
                     aria-current={isActive ? "true" : undefined}
                     className={cn(
                       "text-base font-bold transition-colors lg:text-lg",
@@ -143,7 +227,10 @@ export function Navbar() {
                 <li key={link.href}>
                   <Link
                     href={hrefFor(link.href)}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={(event) => {
+                      handleSectionClick(event, link.href);
+                      setMenuOpen(false);
+                    }}
                     className="block rounded-md px-4 py-3 text-base font-medium text-canvas transition-colors hover:bg-canvas/10 hover:text-orange"
                   >
                     {link.label}
