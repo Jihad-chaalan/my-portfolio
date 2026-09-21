@@ -2,10 +2,9 @@
  * Normalized project model.
  *
  * This type is intentionally decoupled from any specific data source.
- * Phase 1 reads projects from local static data (see `data/projects.ts`)
- * through the repository in `lib/project-repository.ts`. When Contentful
- * (or any other CMS) is introduced later, only the repository needs to
- * change — UI components should never depend on this shape changing.
+ * Projects are read from Contentful (see `lib/contentful-client.ts`) through
+ * the repository in `lib/project-repository.ts`, which maps the CMS response
+ * into this shape. Components should never depend on this shape changing.
  */
 
 export interface ProjectImage {
@@ -23,8 +22,8 @@ export interface ProjectChallenge {
  * External links for a project.
  *
  * Both fields are **required but nullable** on purpose. The data source —
- * `data/projects.ts` today, Contentful later — must always state whether a
- * link exists, with `null` meaning "this project has no public demo / repo".
+ * the Contentful `project` content type — must always state whether a link
+ * exists, with `null` meaning "this project has no public demo / repo".
  *
  * The UI depends on that distinction: the project card always renders a
  * "Live Demo" button and switches it between clickable (URL present) and

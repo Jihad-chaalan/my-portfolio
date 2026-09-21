@@ -1,73 +1,62 @@
 import type { Project } from "@/types";
-import { projects as staticProjects } from "@/data/projects";
-import {
-  getContentfulClient,
-  getContentfulConfig,
-} from "@/lib/contentful-client";
+import { requireContentfulClient } from "@/lib/contentful-client";
 import { mapProject } from "@/lib/contentful-mapper";
 
 /**
  * Data-access seam for projects.
  *
- * UI components should always read project data through this module,
- * never directly from `data/projects.ts`.
+ * UI components always read project content through this module — never from
+ * Contentful directly. The `project` content type in Contentful is the single
+ * source of truth: the local `data/projects.ts` file was deleted once the
+ * migration was verified, so there is no static fallback. Missing
+ * configuration, a failed request, or an empty space throws with an
+ * actionable message instead of rendering an empty portfolio.
  *
- * Phase 2: when the Contentful environment variables are present, the
- * bodies below fetch from the Contentful Delivery API and map entries into
- * the normalized `Project` shape (`lib/contentful-mapper.ts`). When they
- * are absent — or Contentful is unreachable / has no published entries —
- * the local static data in `data/` is used as a fallback so the site keeps
- * working everywhere (dev, CI, preview). Only these function bodies know
- * where data comes from; no component or type changes when the source
- * changes.
- *
- * Functions are `async` so call sites (`await getAllProjects()`) match
- * either backing implementation.
+ * Functions are `async` because the backing store is a network API; call
+ * sites use `await getAllProjects()`.
  */
 
 const CONTENT_TYPE_PROJECT = "project";
 
-async function fetchProjectsFromContentful(): Promise<Project[] | null> {
-  const client = getContentfulClient();
-  if (!client) return null; // Not configured → static fallback
+async function fetchProjects(): Promise<Project[]> {
+  const client = requireContentfulClient();
 
+  let entries;
   try {
-    const response = await client.getEntries({
+    entries = await client.getEntries({
       content_type: CONTENT_TYPE_PROJECT,
       include: 2,
     });
-
-    if (response.items.length === 0) {
-      // Configured but nothing published — almost certainly the "draft
-      // entries" mistake. Shout about it, then fall back.
-      console.warn(
-        "[project-repository] Contentful is configured but returned 0 " +
-          "published projects. Are the entries (and their image assets) " +
-          "published in the space? Falling back to local static data.",
-      );
-      return null;
-    }
-
-    // Featured projects first (showcase priority), then by creation order
-    // so the card sequence is stable and editor-controlled.
-    const mapped = response.items.map((entry) => mapProject(entry as never));
-    return mapped.sort((a, b) => {
-      if (a.featured !== b.featured) return a.featured ? -1 : 1;
-      return 0;
-    });
   } catch (error) {
-    console.error(
-      "[project-repository] Contentful fetch failed — falling back to " +
-        "local static data. Error:",
-      error,
+    throw new Error(
+      `[project-repository] Failed to fetch "${CONTENT_TYPE_PROJECT}" ` +
+        `entries from Contentful: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
     );
-    return null;
   }
+
+  if (entries.items.length === 0) {
+    throw new Error(
+      `[project-repository] Contentful returned 0 published ` +
+        `"${CONTENT_TYPE_PROJECT}" entries. Create and publish the project ` +
+        `entries (and their image assets) in the space — draft entries are ` +
+        `invisible to the Delivery API.`,
+    );
+  }
+
+  const mapped = entries.items.map((entry) => mapProject(entry as never));
+
+  // Featured projects first (showcase priority); the relative order of the
+  // remaining cards is whatever the space returns, so it stays editor-controlled.
+  return mapped.sort((a, b) => {
+    if (a.featured !== b.featured) return a.featured ? -1 : 1;
+    return 0;
+  });
 }
 
 export async function getAllProjects(): Promise<Project[]> {
-  const fromContentful = await fetchProjectsFromContentful();
-  return fromContentful ?? staticProjects;
+  return fetchProjects();
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
@@ -83,9 +72,4 @@ export async function getProjectBySlug(slug: string): Promise<Project | undefine
 export async function getAllProjectSlugs(): Promise<string[]> {
   const all = await getAllProjects();
   return all.map((project) => project.slug).filter(Boolean);
-}
-
-/** Diagnostics helper — reports which data source is active. */
-export function getActiveDataSource(): "contentful" | "static" {
-  return getContentfulConfig() ? "contentful" : "static";
 }

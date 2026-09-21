@@ -32,7 +32,7 @@ Navigation (`Home / Skills / Projects / Contact`) smooth-scrolls to these sectio
 
 ## Projects
 
-Three real projects are documented (see `data/projects.ts` for the full normalized content), each with its own detail page at `/projects/[slug]`:
+Three real projects are documented (authored in Contentful — see `ARCHITECTURE.md` for the content model), each with its own detail page at `/projects/[slug]`:
 
 1. **Secure Multi-Tenant RAG** (`secure-multi-tenant-rag`) — a production-oriented, multi-tenant RAG platform: FastAPI backend, hybrid search (BM25 + vector) with reranking, RBAC, Google Drive ingestion, and an AI firewall layer.
 2. **AI Daily News** (`ai-daily-news`) — an automated AI agent system (not a news website) that researches, summarizes, evaluates, and publishes news daily, using LangGraph for multi-step orchestration, with a web interface and daily notifications.
@@ -44,12 +44,11 @@ No statistics, clients, users, or outcomes are invented beyond what is stated ab
 
 - Communicate technical seniority through design restraint, not decoration.
 - Make projects look like real, deployable products — architecture, decisions, and trade-offs are shown, not just a feature list.
-- Keep the codebase simple, typed, and easy for a future Cline session (or another engineer) to extend — especially around swapping in Contentful later (see `ARCHITECTURE.md`).
+- Keep the codebase simple, typed, and easy for a future Cline session (or another engineer) to extend — content lives in Contentful behind a repository seam (see `ARCHITECTURE.md`).
 - Meet production-quality bars for accessibility, SEO, responsiveness, and performance without over-engineering.
 
-## Non-goals (explicitly out of scope for Phase 1)
+## Non-goals (explicitly out of scope)
 
-- Contentful or any other CMS integration (planned, not built — see `ARCHITECTURE.md`).
 - A custom booking/scheduling system (uses an external booking link).
 - Traditional CV content (education, employment history, timeline).
 - Blog, dashboard, or any additional unrelated pages beyond the homepage and `/projects/[slug]`.

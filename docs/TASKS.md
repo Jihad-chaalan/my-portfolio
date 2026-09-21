@@ -8,14 +8,14 @@ Tracks implementation progress for the portfolio rebuild. Update this file at th
 - [x] Read the bundled Next.js 16 docs (`node_modules/next/dist/docs`) for project structure, fonts, images, CSS, metadata, and linking conventions before writing code (per `AGENTS.md`).
 - [x] Created folder structure: `components/{layout,ui,sections,projects}`, `data/`, `types/`, `lib/`, `docs/`, `public/images/projects/`.
 - [x] Defined the normalized `Project` type (`types/project.ts`) and `SkillCategory` type (`types/skill.ts`), plus barrel export (`types/index.ts`).
-- [x] Created local static data: `data/projects.ts` (Secure Multi-Tenant RAG, AI Daily News, Crypto Futures Alert — no invented stats) and `data/skills.ts` (AI Engineering, Full-Stack Development, DevOps & Deployment).
+- [x] Created local static data: `data/projects.ts` (Secure Multi-Tenant RAG, AI Daily News, Crypto Futures Alert — no invented stats) and `data/skills.ts` (AI Engineering, Full-Stack Development, DevOps & Deployment). *(Superseded: this content now lives in Contentful and the `data/` files were deleted — see Task 4b.)*
 - [x] Created the repository seam: `lib/project-repository.ts`, `lib/skills-repository.ts` (async functions; UI must call these, never `data/*` directly).
 - [x] Created `lib/site.ts` (site identity, nav links, contact/booking links).
 - [x] Set up all four fonts via `next/font/google` in `app/layout.tsx`: Manrope, Shrikhand, Bungee, and Archivo Black (temporary stand-in for the licensed Bowlby One SC).
 - [x] Defined design tokens in `app/globals.css` (`@theme inline`): `--color-canvas/forest/orange/surface`, `--font-sans/brand/sub/display`; added `prefers-reduced-motion` handling, global focus-visible ring, smooth scroll.
 - [x] Added base `Metadata` (title template, description, OpenGraph, Twitter, robots) to `app/layout.tsx`, plus a skip-to-content link.
 - [x] Replaced the starter `app/page.tsx` with a minimal `#home` checkpoint section (full Hero/Skills/Projects/Contact composition comes in Task 3) and removed the unused starter SVGs from `public/`.
-- [x] Added placeholder project imagery (`public/images/projects/*.svg`) referenced by `data/projects.ts`, using only palette colors.
+- [x] Added placeholder project imagery (`public/images/projects/*.svg`) referenced by the project data, using only palette colors. *(The same SVGs are also uploaded as Contentful assets, so the site serves them from `images.ctfassets.net` — see Task 4b.)*
 - [x] Set `turbopack.root` in `next.config.ts` to fix a Turbopack root-detection warning caused by an unrelated `package-lock.json` in a parent OneDrive folder.
 - [x] Verified: `npm run lint` (clean), `npx tsc --noEmit` (clean), `npm run build` (clean, static homepage + `_not-found` prerendered).
 - [x] Wrote `docs/PROJECT.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, `docs/TASKS.md`.
@@ -78,17 +78,25 @@ Tracks implementation progress for the portfolio rebuild. Update this file at th
 - [x] `components/projects/ProjectDetailReveal.tsx` — shared one-shot reveal wrapper (reduced-motion aware).
 - [x] Hero CTAs as "hang-tag" plates; card actions (View Details / Live Demo) restyled to match; back breadcrumb at top.
 
-## Task 4b — Contentful Integration (Phase 2) ⏳ Live in build, awaiting user's visual check
+## Task 4b — Contentful Integration (Phase 2) ✅ Complete — Contentful is the only data source
 
 - [x] `contentful` SDK installed; `next.config.ts` `images.remotePatterns` for `images.ctfassets.net`.
 - [x] `lib/contentful-client.ts` — server-only cached Delivery client; returns `null` when env vars missing.
 - [x] `lib/contentful-mapper.ts` — entry → `Project` / `SkillCategory` normalization (asset `https:` + description→alt, empty URLs → `null`, JSON-array guards).
 - [x] Repositories rewritten (bodies only, same signatures): Contentful when configured, with loud warning + static fallback when unconfigured/unreachable/**0 published entries**. `data/` deliberately kept as the fallback (dev/CI work with no credentials).
 - [x] `.env.example` documented (`CONTENTFUL_SPACE_ID`, `CONTENTFUL_DELIVERY_ACCESS_TOKEN`, `CONTENTFUL_ENVIRONMENT`, plus the script-only `CONTENTFUL_MANAGEMENT_TOKEN`).
-- [x] **`scripts/seed-contentful.ts` + `npm run seed:contentful`** — one-off, idempotent Management-API seeder built on the plain client (`contentful-management` v12; the fluent `getSpace()/getEnvironment()` API is deprecated there). Uploads the 6 placeholder images as assets, then creates + publishes 3 `project` entries and 3 `skillCategory` entries, reading its content straight from `data/projects.ts` / `data/skills.ts`. Re-runs update entries and reuse assets (matched by title) instead of duplicating; never deletes anything.
+- [x] **`scripts/seed-contentful.ts` + `npm run seed:contentful` (later deleted — see below)** — one-off, idempotent Management-API seeder built on the plain client (`contentful-management` v12; the fluent `getSpace()/getEnvironment()` API is deprecated there). Uploaded the 6 placeholder images as assets, then created + published 3 `project` entries and 3 `skillCategory` entries, reading its content from the then-current `data/projects.ts` / `data/skills.ts`. Re-runs updated entries and reused assets (matched by title) instead of duplicating; never deleted anything.
 - [x] Seed run against the real space: 3 projects + 3 skill categories created and published, 6 assets uploaded; second run confirmed idempotent (all "asset reused" / "entry updated").
-- [x] **Build verified Contentful-powered:** with no fallback warning, all 3 `/projects/*` routes prerendered, and prerendered HTML references `https://images.ctfassets.net/...` with **zero** local `/images/projects/*` paths. Asset descriptions correctly carried through to `alt` text.
-- [ ] User visual check of the Contentful-sourced site; then decide whether to delete `data/` (ARCHITECTURE.md migration step 4) or keep the static fallback permanently.
+- [x] **Build verified Contentful-powered:** with no fallback warning, all 3 `/projects/*` routes prerendered, and prerendered HTML referenced `https://images.ctfassets.net/...` with **zero** local `/images/projects/*` paths. Asset descriptions correctly carried through to `alt` text.
+
+### Static data removed — Contentful is now the single source of truth
+
+- [x] User finished authoring/editing the content in the Contentful space, so the static data was retired.
+- [x] **Deleted `data/projects.ts`, `data/skills.ts`, and the `data/` directory.** (The content remains recoverable from git history — commit `699415a` is the last one touching `data/`.)
+- [x] **Deleted `scripts/seed-contentful.ts` and the whole `scripts/` directory.** The seeder existed only to import the static data; keeping a content snapshot would (a) contradict "single source of truth" and (b) let a re-run silently overwrite the user's hand-edited Contentful content. Its dependencies were removed too: the `seed:contentful` npm script and the `contentful-management` + `tsx` devDependencies (7 packages pruned).
+- [x] Repositories are now Contentful-only: `requireContentfulClient()` throws a setup error when the env vars are missing, a fetch failure is rethrown with the content type named, and **0 published entries now throws** (instead of falling back). The unused `getActiveDataSource()` helper was removed.
+- [x] `lib/contentful-client.ts`, `types/project.ts`, `.env.example`, `docs/ARCHITECTURE.md` (stack line, folder tree, data-layer + content-model sections) and `docs/PROJECT.md` updated so no doc or comment points at the deleted files or calls Contentful a future/non-goal item.
+- [x] Verified: `tsc` 0, `eslint .` 0, `next build` 0 with all 3 project routes prerendered and Contentful-sourced imagery.
 
 ## Task 5 — Quality ⏳ Not started
 

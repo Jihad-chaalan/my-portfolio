@@ -5,7 +5,9 @@
 - **Next.js 16.3.4**, App Router, Turbopack (dev + build).
 - **React 19**, **TypeScript 5** (strict mode).
 - **Tailwind CSS v4** (CSS-first configuration — no `tailwind.config.js`; tokens live in `app/globals.css` via `@theme`).
-- No additional runtime dependencies beyond what `create-next-app` installed. No animation library, no CMS SDK, no state-management library — none are needed for this project's scope.
+- **gsap** — the only animation library, used for the hero page-load intro and the one-shot section/detail reveals.
+- **contentful** (Delivery API SDK) — projects and skills are authored in Contentful; there is no local static content.
+- No state-management library — none is needed for this project's scope.
 
 > **Important:** this project pins Next.js 16.3.4, which has meaningful breaking changes vs. older Next.js knowledge (see the repo's `AGENTS.md`). Conventions below were verified against `node_modules/next/dist/docs/` at the time of writing, not from general training knowledge. Re-check that folder before assuming an older-Next.js pattern still applies.
 
@@ -31,21 +33,19 @@ components/
 ├── sections/              # One component per homepage section (Hero, Skills, ...)
 └── projects/               # ProjectCard, ProjectDetail and its subsections
 
-data/                      # Local static content (Phase 1 data source)
-├── projects.ts             # The 3 Project records
-└── skills.ts                # The 3 SkillCategory records
-
 types/                     # Shared, presentation-agnostic TypeScript types
 ├── project.ts
 ├── skill.ts
 └── index.ts                # Barrel re-export
 
 lib/                       # Data-access + site config (no React here)
-├── project-repository.ts   # getAllProjects / getFeaturedProjects / getProjectBySlug / getAllProjectSlugs
-├── skills-repository.ts    # getSkillCategories
-└── site.ts                  # siteConfig (name, urls, contact links) + navLinks
+├── contentful-client.ts   # Server-only Delivery API client (only Contentful-aware module)
+├── contentful-mapper.ts   # Contentful entry → Project / SkillCategory
+├── project-repository.ts  # getAllProjects / getFeaturedProjects / getProjectBySlug / getAllProjectSlugs
+├── skills-repository.ts   # getSkillCategories
+└── site.ts                # siteConfig (name, urls, contact links) + navLinks
 
-public/images/projects/     # Placeholder project imagery (SVG), referenced by data/projects.ts
+public/images/projects/     # Placeholder project imagery (SVG) — also uploaded as Contentful assets
 
 docs/                       # This documentation set
 ```
@@ -85,34 +85,39 @@ Only components that need interactivity (`Navbar` mobile menu / active-link high
 
 ## Data layer & project model
 
-The brief requires that Contentful can be introduced later **without rewriting the UI**. This is achieved with a strict layering:
+Content is authored in **Contentful** and fetched at build/render time through the Delivery API. The brief required that introducing Contentful later would not mean rewriting the UI — that layering is what made this migration a data-layer-only change:
 
 ```text
 UI Components  (components/sections, components/projects, app/*)
       ↓  (only ever call functions from lib/*-repository.ts)
 Repository     (lib/project-repository.ts, lib/skills-repository.ts)
-      ↓  (Phase 1 implementation reads from data/*)
-Local Static Data (data/projects.ts, data/skills.ts)
+      ↓  (map entries via lib/contentful-mapper.ts)
+Contentful Delivery API  (content types: project, skillCategory)
 ```
 
-Rules that make this swap-safe:
+Rules that keep this swap-safe:
 
-- **Components never import `data/projects.ts` or `data/skills.ts` directly.** They call `getAllProjects()`, `getFeaturedProjects()`, `getProjectBySlug(slug)`, `getAllProjectSlugs()`, or `getSkillCategories()` from `lib/*-repository.ts`.
-- **Repository functions are `async`**, even though the Phase 1 implementation is synchronous under the hood. This means call sites (`await getAllProjects()`) already match the shape a network-backed repository (e.g. calling the Contentful Delivery API) will need — no call site changes when the backing implementation changes.
-- **The `Project` and `SkillCategory` types in `types/` are the contract.** They are deliberately generic/normalized (plain strings, string arrays, nested plain objects) and contain no Contentful-specific shapes (no rich-text nodes, asset link objects, etc.). Any CMS response must be mapped into this shape inside the repository before it's returned.
-- **Images are referenced by data, not hardcoded in components.** `Project.image`, `Project.heroImage`, and `Project.screenshots` are `{ src, alt }` objects consumed via `next/image`, so swapping placeholder SVGs for real screenshots — or Contentful asset URLs — never touches a component.
+- **Components never import Contentful or any data source directly.** They call `getAllProjects()`, `getFeaturedProjects()`, `getProjectBySlug(slug)`, `getAllProjectSlugs()`, or `getSkillCategories()` from `lib/*-repository.ts`.
+- **Repository functions are `async`** — call sites already used `await getAllProjects()`, so moving from local files to a network API required no call-site changes.
+- **The `Project` and `SkillCategory` types in `types/` are the contract.** They are deliberately generic/normalized (plain strings, string arrays, nested plain objects) and contain no Contentful-specific shapes (no rich-text nodes, asset link objects, etc.). `lib/contentful-mapper.ts` maps CMS responses into this shape before they're returned.
+- **Images are referenced by data, not hardcoded in components.** `Project.image`, `Project.heroImage`, and `Project.screenshots` are `{ src, alt }` objects consumed via `next/image`, so the move from local placeholder SVGs to `images.ctfassets.net` URLs touched nothing but the data source. Asset **descriptions** in Contentful become the `alt` text.
+- **Contentful is the single source of truth.** The local static data (`data/projects.ts`, `data/skills.ts`) was deleted after the migration was verified. A missing configuration, an unreachable API, or an empty space therefore **throws with an actionable message** instead of silently rendering an empty portfolio.
 
-### Future Contentful integration strategy
+### Contentful integration (current)
 
-When Contentful is introduced:
+- `lib/contentful-client.ts` — the **only** module aware of Contentful. Exposes `getContentfulConfig()`, a lazily-created cached client (`getContentfulClient()`), and `requireContentfulClient()` (used by the repositories; throws with setup instructions when the env vars are missing). Server-only: calling it from client code throws.
+- `lib/contentful-mapper.ts` — pure functions mapping entries → `Project` / `SkillCategory`: normalizes asset URLs to `https:`, uses the asset description as `alt` (title as fallback), turns empty `demoUrl` / `githubUrl` fields into `null` (which renders the disabled "Live Demo" button), and validates the JSON-array fields with clear errors.
+- `next.config.ts` — registers `images.remotePatterns` for `images.ctfassets.net`.
+- Environment variables (see `.env.example`): `CONTENTFUL_SPACE_ID`, `CONTENTFUL_DELIVERY_ACCESS_TOKEN`, `CONTENTFUL_ENVIRONMENT`. They must be present locally **and** in the hosting provider's environment.
 
-1. Add the Contentful SDK as a dependency and define environment variables for space ID / access token.
-2. Create a new file, e.g. `lib/contentful-client.ts`, encapsulating the SDK client (marked so it only runs server-side).
-3. Rewrite the **bodies** of the functions in `lib/project-repository.ts` (and `skills-repository.ts`, if desired) to fetch from Contentful and map the response into the existing `Project` / `SkillCategory` shape.
-4. Delete or stop importing `data/projects.ts` / `data/skills.ts` once the migration is verified — nothing else changes.
-5. No component, page, or type in `components/`, `app/`, or `types/` needs to change.
+Content types and their fields (as authored in the space):
 
-This is intentionally the **only** place Contentful-awareness should ever live.
+| Content type | Fields |
+|---|---|
+| `project` | `slug` (unique), `name`, `category`, `tagline`, `summary`, `overview`, `problem`, `solution`, `architecture`, `keyFeatures` (JSON string array), `technologies` (JSON string array), `challenges` (JSON array of `{title, body}`), `outcomes` (JSON string array), `image` (media), `heroImage` (media), `screenshots` (media, many), `demoUrl`, `githubUrl`, `featured` (boolean) |
+| `skillCategory` | `id` (unique), `title`, `description`, `items` (JSON string array) |
+
+Lists are modelled as single **JSON object** fields because Contentful has no "array of strings" field type, and these lists are display-only (nothing links to or publishes them individually). That keeps one entry per project/skill card and makes the mapper a pass-through.
 
 ## Routing
 
