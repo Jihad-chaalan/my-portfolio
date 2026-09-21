@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { refreshWhenLayoutSettles } from "@/lib/scroll-settle";
 import type { SkillCategory } from "@/types";
 import { cn } from "@/lib/cn";
 
@@ -123,18 +124,17 @@ export function SkillStack({ categories }: { categories: SkillCategory[] }) {
       });
     }, root);
 
-    // Recalculate trigger positions once fonts/images finish loading —
-    // late layout shifts otherwise leave a card stuck visible or hidden.
+    // Recalculate trigger positions once fonts/images finish loading — late
+    // layout shifts otherwise leave a card stuck visible or hidden. The
+    // helper skips the refresh on client-side navigations, where it would
+    // drag this page to the previous page's remembered scroll offset — see
+    // `lib/scroll-settle.ts`.
     let disposed = false;
-    const refresh = () => {
-      if (!disposed) ScrollTrigger.refresh();
-    };
-    window.addEventListener("load", refresh);
-    void document.fonts?.ready.then(refresh);
+    const disposeSettle = refreshWhenLayoutSettles(() => disposed);
 
     return () => {
       disposed = true;
-      window.removeEventListener("load", refresh);
+      disposeSettle();
       ctx.revert();
     };
   }, []);

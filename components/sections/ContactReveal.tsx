@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { refreshWhenLayoutSettles } from "@/lib/scroll-settle";
 import { cn } from "@/lib/cn";
 
 interface ContactRevealProps {
@@ -53,10 +54,18 @@ export function ContactReveal({ children, className }: ContactRevealProps) {
         });
       }, el);
 
-      // Re-sync once fonts settle, so trigger positions are never stale.
-      void document.fonts?.ready.then(() => ScrollTrigger.refresh());
+      // Re-sync trigger positions once the layout settles. The helper skips
+      // the refresh on client-side navigations, where it would drag this page
+      // to the previous page's remembered scroll offset — see
+      // `lib/scroll-settle.ts`.
+      let disposed = false;
+      const disposeSettle = refreshWhenLayoutSettles(() => disposed);
 
-      return () => ctx.revert();
+      return () => {
+        disposed = true;
+        disposeSettle();
+        ctx.revert();
+      };
     } catch (error) {
       // Never fail silently — surface setup problems in the console.
       console.error("[ContactReveal] setup failed:", error);

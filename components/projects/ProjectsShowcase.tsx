@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { refreshWhenLayoutSettles } from "@/lib/scroll-settle";
 import type { Project } from "@/types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectCard } from "./ProjectCard";
@@ -210,12 +211,15 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
       }
 
       // Re-measure once fonts/images settle, so offsets are never stale.
-      const refresh = () => ScrollTrigger.refresh();
-      window.addEventListener("load", refresh);
-      void document.fonts?.ready.then(refresh);
+      // The helper skips the refresh on client-side navigations, where it
+      // would drag this page to the previous page's remembered scroll
+      // offset — see `lib/scroll-settle.ts`.
+      let disposed = false;
+      const disposeSettle = refreshWhenLayoutSettles(() => disposed);
 
       return () => {
-        window.removeEventListener("load", refresh);
+        disposed = true;
+        disposeSettle();
         ScrollTrigger.removeEventListener("refreshInit", onRefreshInit);
         ctx.revert();
         stage.style.overflowX = "";
