@@ -53,7 +53,7 @@ export function ProjectAccordion({
             dark ? "text-canvas" : "text-forest",
           )}
         >
-          <span className="font-sub text-2xl uppercase sm:text-3xl">{title}</span>
+          <h2 className="font-sub text-2xl uppercase sm:text-3xl">{title}</h2>
           <span aria-hidden="true" className="shrink-0 text-2xl leading-none">
             {open ? "−" : "+"}
           </span>
@@ -72,13 +72,12 @@ export function ProjectAccordion({
 
 export function ProjectTechList({ technologies }: { technologies: string[] }) {
   const [expanded, setExpanded] = useState(false);
-  const visibleTechnologies = expanded ? technologies : technologies.slice(0, 4);
   const hasMore = technologies.length > 4;
 
   return (
     <>
       <ul className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-4 sm:gap-x-4 sm:gap-y-5">
-        {visibleTechnologies.map((tech, i) => {
+        {technologies.map((tech, i) => {
           const stickerStyles = [
             "-rotate-3 bg-orange",
             "rotate-2 bg-canvas",
@@ -90,7 +89,7 @@ export function ProjectTechList({ technologies }: { technologies: string[] }) {
           return (
             <li
               key={tech}
-              className={`${stickerStyles[i % stickerStyles.length]} rounded-md border-2 border-forest px-3 py-2 font-display text-xs uppercase tracking-wide text-forest shadow-[3px_3px_0_0_var(--color-forest)] transition-transform duration-200 hover:rotate-0 hover:scale-105 sm:px-4 sm:py-2.5 sm:text-sm`}
+              className={`${stickerStyles[i % stickerStyles.length]} ${i >= 4 && !expanded ? "hidden sm:block" : ""} rounded-md border-2 border-forest px-3 py-2 font-display text-xs uppercase tracking-wide text-forest shadow-[3px_3px_0_0_var(--color-forest)] transition-transform duration-200 hover:rotate-0 hover:scale-105 sm:px-4 sm:py-2.5 sm:text-sm`}
             >
               {tech}
             </li>
@@ -102,7 +101,7 @@ export function ProjectTechList({ technologies }: { technologies: string[] }) {
           type="button"
           onClick={() => setExpanded(!expanded)}
           aria-expanded={expanded}
-          className="mt-5 rounded-md border-2 border-forest bg-canvas px-4 py-2 font-display text-xs uppercase tracking-wide text-forest shadow-[3px_3px_0_0_var(--color-orange)] transition-all hover:bg-orange hover:shadow-[2px_2px_0_0_var(--color-forest)]"
+          className="mt-5 rounded-md border-2 border-forest bg-canvas px-4 py-2 font-display text-xs uppercase tracking-wide text-forest shadow-[3px_3px_0_0_var(--color-orange)] transition-all hover:bg-orange hover:shadow-[2px_2px_0_0_var(--color-forest)] sm:hidden"
         >
           {expanded ? "Show fewer technologies" : `View all technologies (${technologies.length})`}
         </button>

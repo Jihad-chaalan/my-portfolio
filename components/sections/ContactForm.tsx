@@ -13,7 +13,7 @@ interface ContactFormProps {
 const labelClasses =
   "mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-forest/70";
 const inputClasses =
-  "w-full border-b-2 border-forest/20 bg-transparent px-1 py-2.5 text-base font-medium text-forest transition-colors duration-200 placeholder:text-forest/35 focus:border-orange focus:outline-none";
+  "w-full border-b-2 border-forest/20 bg-transparent px-1 py-2.5 text-base font-medium text-forest transition-colors duration-200 placeholder:text-forest/55 focus:border-orange focus:outline-none";
 const requiredMark = (
   <span aria-hidden="true" className="text-orange">
     *

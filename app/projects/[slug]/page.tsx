@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
@@ -62,6 +62,7 @@ const proseClasses = "text-base leading-relaxed text-forest/85 sm:text-lg";
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
+
   const project = await getProjectBySlug(slug);
 
   if (!project) notFound();
@@ -76,6 +77,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <main id="main-content">
+
       <article>
         {/* Editorial title block */}
         <header className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-24 sm:px-6 sm:pb-10 sm:pt-36 lg:px-8">
@@ -113,7 +115,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 target={project.links.demo ? "_blank" : undefined}
                 rel={project.links.demo ? "noopener noreferrer" : undefined}
                 aria-disabled={!project.links.demo}
-                className={`inline-flex min-h-11 items-center justify-center rounded-md px-6 font-display text-base uppercase tracking-wide sm:text-lg ${project.links.demo ? "rotate-[2deg] border-2 border-forest bg-orange text-forest shadow-[5px_6px_0_0_var(--color-forest)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-forest)]" : "cursor-not-allowed border-2 border-forest/30 bg-canvas/60 text-forest/40 shadow-none"}`}
+                className={`inline-flex min-h-11 items-center justify-center rounded-md px-6 font-display text-base uppercase tracking-wide sm:text-lg ${project.links.demo ? "rotate-[2deg] border-2 border-forest bg-orange text-forest shadow-[5px_6px_0_0_var(--color-forest)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-forest)]" : "cursor-not-allowed border-2 border-forest/50 bg-canvas/80 text-forest/70 shadow-none"}`}
               >
                 Live Demo
               </Link>

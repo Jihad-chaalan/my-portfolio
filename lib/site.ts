@@ -9,7 +9,7 @@ export const siteConfig = {
   role: "Full-Stack AI Engineer",
   title: "Jihad Chaalan — Full-Stack AI Engineer",
   description:
-    "Full-Stack AI Engineer building production-oriented AI systems: RAG pipelines, AI agents, APIs, and the web applications around them — from frontend to backend to deployment.",
+    "Jihad Chaalan is an independent Full-Stack AI Engineer and freelance developer who builds practical AI products for businesses and startups: RAG systems, LLM applications, AI agents, chatbots, workflow automation, APIs, and complete web applications from frontend to backend and deployment.",
   url: "https://jihadchaalan.dev",
   email: "chaalan2004@gmail.com",
   /* Display form for the Contact section; the tel: link is derived from it. */
