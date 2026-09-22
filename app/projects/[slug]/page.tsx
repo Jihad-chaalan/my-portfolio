@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ProjectGallery } from "@/components/projects/ProjectGallery";
+import { MobileClamp, ProjectGallery } from "@/components/projects/ProjectGallery";
 import { ProjectDetailReveal } from "@/components/projects/ProjectDetailReveal";
 import {
   getAllProjectSlugs,
@@ -73,7 +73,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <main id="main-content">
       <article>
         {/* Editorial title block */}
-        <header className="relative mx-auto w-full max-w-6xl px-4 pb-10 pt-28 sm:px-6 sm:pt-36 lg:px-8">
+        <header className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-24 sm:px-6 sm:pb-10 sm:pt-36 lg:px-8">
           {/* Breadcrumb row — the standard home for a back link: aligned
               with the content edge, directly above the title's meta row */}
           <Link
@@ -89,16 +89,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               {project.category}
             </p>
           </div>
-          <h1 className="mt-5 font-display text-[11vw] uppercase leading-[0.95] tracking-tight text-forest sm:text-7xl lg:text-8xl">
+          <h1 className="mt-4 max-w-full break-words font-display text-[13vw] uppercase leading-[0.9] tracking-tight text-forest sm:mt-5 sm:text-7xl lg:text-8xl">
             {project.name}
           </h1>
           {/* Orange underline stroke � a marker swash under the title */}
           <div aria-hidden="true" className="mt-2 h-3 w-40 -rotate-1 bg-orange sm:w-64" />
-          <div className="mt-8 flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
+          <div className="mt-6 flex flex-col gap-6 sm:mt-8 sm:flex-row sm:items-end sm:justify-between">
             <p className="max-w-2xl text-lg leading-relaxed text-forest/80 sm:text-xl">
               {project.tagline}
             </p>
-            <div className="flex shrink-0 flex-wrap items-center gap-4 sm:gap-5">
+            <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
               {/* Hero plates — the Technologies/Skills stamped-plate style,
                   scaled up for display type. Same construction (thick border,
                   flat offset shadow, uppercase display label, tilt), mirrored
@@ -108,7 +108,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 target={project.links.demo ? "_blank" : undefined}
                 rel={project.links.demo ? "noopener noreferrer" : undefined}
                 aria-disabled={!project.links.demo}
-                className={`inline-flex min-h-11 items-center rounded-md px-6 font-display text-base uppercase tracking-wide sm:text-lg ${project.links.demo ? "rotate-[2deg] border-2 border-forest bg-orange text-forest shadow-[5px_6px_0_0_var(--color-forest)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-forest)]" : "cursor-not-allowed border-2 border-forest/30 bg-canvas/60 text-forest/40 shadow-none"}`}
+                className={`inline-flex min-h-11 items-center justify-center rounded-md px-6 font-display text-base uppercase tracking-wide sm:text-lg ${project.links.demo ? "rotate-[2deg] border-2 border-forest bg-orange text-forest shadow-[5px_6px_0_0_var(--color-forest)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-forest)]" : "cursor-not-allowed border-2 border-forest/30 bg-canvas/60 text-forest/40 shadow-none"}`}
               >
                 Live Demo
               </Link>
@@ -117,7 +117,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   href={project.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 rotate-[-2deg] items-center rounded-md border-2 border-forest bg-canvas px-6 font-display text-base uppercase tracking-wide text-forest shadow-[5px_6px_0_0_var(--color-orange)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-orange)] sm:text-lg"
+                  className="inline-flex min-h-11 rotate-[-2deg] items-center justify-center rounded-md border-2 border-forest bg-canvas px-6 font-display text-base uppercase tracking-wide text-forest shadow-[5px_6px_0_0_var(--color-orange)] transition-all duration-200 hover:rotate-0 hover:shadow-[2px_3px_0_0_var(--color-orange)] sm:text-lg"
                 >
                   GitHub
                 </Link>
@@ -126,18 +126,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </header>
 
-        <ProjectDetailReveal className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          {/* The journey line � runs behind the whole story, stages hang off it */}
+        <ProjectDetailReveal className="relative mx-auto w-full max-w-6xl px-3 sm:px-6 lg:px-8">
+          {/* The journey line — runs behind the whole story, stages hang off it */}
           <div
             aria-hidden="true"
-            className="absolute bottom-0 left-[27px] top-0 w-1 bg-forest/10 sm:left-[35px]"
+            className="absolute bottom-0 left-[15px] top-0 w-1 bg-forest/10 sm:left-[35px]"
           />
 
           {/* ==== Taped-photo gallery (image style kept) ==== */}
-          <div data-reveal className="relative pl-16 sm:pl-24">
+          <div data-reveal id="stage-gallery" className="relative scroll-mt-28 pl-10 sm:scroll-mt-36 sm:pl-24">
             <span
               aria-hidden="true"
-              className="absolute left-[19px] top-14 z-10 h-4 w-4 rotate-45 bg-orange sm:left-[27px] sm:h-5 sm:w-5"
+              className="absolute left-[9px] top-10 z-10 h-3.5 w-3.5 rotate-45 bg-orange sm:left-[27px] sm:top-14 sm:h-5 sm:w-5"
             />
             <ProjectGallery
               images={galleryImages}
@@ -148,43 +148,43 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
           {/* ==== Stage 01 � The Problem (white paper card) ==== */}
           <section
-            aria-labelledby="project-problem"
+            id="stage-problem" aria-labelledby="project-problem"
             data-reveal
-            className="relative mt-24 pl-16 sm:pl-24"
+            className="relative mt-10 pl-10 sm:mt-20 sm:pl-24"
           >
             <span
               aria-hidden="true"
-              className="absolute left-[19px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
+              className="absolute left-[13px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
             >
               <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
             </span>
-            <p className="font-display text-6xl leading-none text-forest/15 sm:text-8xl">01</p>
-            <div className="-mt-4 max-w-3xl -rotate-[0.4deg] border border-forest/10 bg-surface p-6 shadow-[5px_7px_0_0_var(--color-forest)] sm:p-9">
+            <p className="font-display text-5xl leading-none text-forest/15 sm:text-8xl">01</p>
+            <div className="-mt-3 max-w-3xl -rotate-[0.4deg] border border-forest/10 bg-surface p-4 shadow-[3px_4px_0_0_var(--color-forest)] sm:-mt-4 sm:p-9 sm:shadow-[5px_7px_0_0_var(--color-forest)]">
               <h2 id="project-problem" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
                 The Problem
               </h2>
-              <p className={`mt-4 ${proseClasses}`}>{project.problem}</p>
+              <p className={`mt-4 ${proseClasses}`}><MobileClamp text={project.problem} /></p>
             </div>
           </section>
 
           {/* ==== Stage 03 � The Solution (dark forest story beat) ==== */}
           <section
-            aria-labelledby="project-solution"
+            id="stage-solution" aria-labelledby="project-solution"
             data-reveal
-            className="relative mt-20 pl-16 sm:pl-24"
+            className="relative mt-10 pl-10 sm:mt-20 sm:pl-24"
           >
             <span
               aria-hidden="true"
-              className="absolute left-[19px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
+              className="absolute left-[13px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
             >
               <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
             </span>
-            <p className="font-display text-6xl leading-none text-orange/80 sm:text-8xl">02</p>
-            <div className="-mt-4 max-w-3xl -rotate-[0.4deg] rounded-2xl bg-forest p-6 shadow-[6px_8px_0_0_var(--color-orange)] sm:p-9">
+            <p className="font-display text-5xl leading-none text-orange/80 sm:text-8xl">02</p>
+            <div className="-mt-3 max-w-3xl -rotate-[0.4deg] rounded-2xl bg-forest p-4 shadow-[4px_5px_0_0_var(--color-orange)] sm:-mt-4 sm:p-9 sm:shadow-[6px_8px_0_0_var(--color-orange)]">
               <h2 id="project-solution" className="font-sub text-2xl uppercase text-canvas sm:text-3xl">
                 The Solution
               </h2>
-              <p className={`mt-4 ${proseClasses} !text-canvas/85`}>{project.solution}</p>
+              <p className={`mt-4 ${proseClasses} !text-canvas/85`}><MobileClamp text={project.solution} /></p>
               {project.challenges.length > 0 ? (
                 <>
                   <h3 className="mt-8 font-sub text-lg uppercase text-canvas">
@@ -204,25 +204,25 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </section>
           {/* ==== Stage 02 � Overview / how it works (white paper card) ==== */}
           <section
-            aria-labelledby="project-overview"
+            id="stage-overview" aria-labelledby="project-overview"
             data-reveal
-            className="relative mt-20 pl-16 sm:pl-24"
+            className="relative mt-10 pl-10 sm:mt-20 sm:pl-24"
           >
             <span
               aria-hidden="true"
-              className="absolute left-[19px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
+              className="absolute left-[13px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
             >
               <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
             </span>
-            <p className="font-display text-6xl leading-none text-forest/15 sm:text-8xl">03</p>
-            <div className="-mt-4 max-w-3xl rotate-[0.4deg] border border-forest/10 bg-surface p-6 shadow-[5px_7px_0_0_var(--color-forest)] sm:p-9">
+            <p className="font-display text-4xl leading-none text-forest/15 sm:text-8xl">03</p>
+            <div className="-mt-4 max-w-3xl rotate-[0.4deg] border border-forest/10 bg-surface p-5 shadow-[3px_4px_0_0_var(--color-forest)] sm:p-9 sm:shadow-[5px_7px_0_0_var(--color-forest)]">
               <h2 id="project-overview" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
                 Overview
               </h2>
-              <p className={`mt-4 ${proseClasses}`}>{project.overview}</p>
+              <p className={`mt-4 ${proseClasses}`}><MobileClamp text={project.overview} /></p>
 
               <h3 className="mt-8 font-sub text-lg uppercase text-forest">How it works</h3>
-              <p className={`mt-3 ${proseClasses}`}>{project.architecture}</p>
+              <p className={`mt-3 ${proseClasses}`}><MobileClamp text={project.architecture} /></p>
 
               <h3 className="mt-8 font-sub text-lg uppercase text-forest">Key features</h3>
               <ul className="mt-3 flex flex-col gap-2">
@@ -239,18 +239,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
           {/* ==== Stage 04 — Technologies & Deployment (tool wall) ==== */}
           <section
-            aria-labelledby="project-tech"
+            id="stage-tech" aria-labelledby="project-tech"
             data-reveal
-            className="relative mt-20 pl-16 pb-24 sm:pl-24"
+            className="relative mt-10 pl-10 pb-20 sm:mt-20 sm:pl-24"
           >
             <span
               aria-hidden="true"
-              className="absolute left-[19px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
+              className="absolute left-[13px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
             >
               <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
             </span>
-            <p className="font-display text-6xl leading-none text-forest/15 sm:text-8xl">04</p>
-            <div className="-mt-4 max-w-3xl rotate-[0.4deg] border border-forest/10 bg-surface p-6 shadow-[5px_7px_0_0_var(--color-forest)] sm:p-9">
+            <p className="font-display text-4xl leading-none text-forest/15 sm:text-8xl">04</p>
+            <div className="-mt-4 max-w-3xl rotate-[0.4deg] border border-forest/10 bg-surface p-5 shadow-[3px_4px_0_0_var(--color-forest)] sm:p-9 sm:shadow-[5px_7px_0_0_var(--color-forest)]">
               <h2 id="project-tech" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
                 Technologies &amp; Deployment
               </h2>

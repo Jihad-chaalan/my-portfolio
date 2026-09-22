@@ -12,6 +12,35 @@ interface ProjectGalleryProps {
 }
 
 /**
+ * Collapsible prose for the mobile detail page — long paragraphs render
+ * clamped to ~4 lines with a "Read more / Show less" toggle; on `sm` screens
+ * and up the full text always shows and the toggle is hidden.
+ *
+ * Pure CSS clamp (`line-clamp-4`) + a real `<button>` with `aria-expanded`,
+ * so keyboard and screen-reader users get the state. Desktop is untouched:
+ * the clamp and the button are both `sm:`-gated.
+ */
+export function MobileClamp({ text }: { text: string }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <span className="block">
+      <span className={cn(!expanded && "line-clamp-4 sm:line-clamp-none")}>
+        {text}
+      </span>
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
+        className="mt-1 font-semibold text-orange underline-offset-2 hover:underline sm:hidden"
+      >
+        {expanded ? "Show less" : "Read more"}
+      </button>
+    </span>
+  );
+}
+
+/**
  * Project image gallery — one large image plus a thumbnail strip.
  *
  * The number of images is whatever the data source provides (one project
