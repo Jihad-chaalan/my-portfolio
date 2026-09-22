@@ -1,7 +1,12 @@
 ﻿import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { MobileClamp, ProjectGallery } from "@/components/projects/ProjectGallery";
+import {
+  MobileClamp,
+  ProjectAccordion,
+  ProjectGallery,
+  ProjectTechList,
+} from "@/components/projects/ProjectGallery";
 import { ProjectDetailReveal } from "@/components/projects/ProjectDetailReveal";
 import {
   getAllProjectSlugs,
@@ -146,95 +151,42 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
 
 
-          {/* ==== Stage 01 � The Problem (white paper card) ==== */}
-          <section
-            id="stage-problem" aria-labelledby="project-problem"
-            data-reveal
-            className="relative mt-10 pl-10 sm:mt-20 sm:pl-24"
-          >
-            <span
-              aria-hidden="true"
-              className="absolute left-[13px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
-            >
-              <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
-            </span>
-            <p className="font-display text-5xl leading-none text-forest/15 sm:text-8xl">01</p>
-            <div className="-mt-3 max-w-3xl -rotate-[0.4deg] border border-forest/10 bg-surface p-4 shadow-[3px_4px_0_0_var(--color-forest)] sm:-mt-4 sm:p-9 sm:shadow-[5px_7px_0_0_var(--color-forest)]">
-              <h2 id="project-problem" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
-                The Problem
-              </h2>
-              <p className={`mt-4 ${proseClasses}`}><MobileClamp text={project.problem} /></p>
-            </div>
-          </section>
+          {/* ==== Collapsible story sections ==== */}
+          <ProjectAccordion id="stage-problem" title="The Problem" number="01">
+            <p className={proseClasses}><MobileClamp text={project.problem} /></p>
+          </ProjectAccordion>
 
-          {/* ==== Stage 03 � The Solution (dark forest story beat) ==== */}
-          <section
-            id="stage-solution" aria-labelledby="project-solution"
-            data-reveal
-            className="relative mt-10 pl-10 sm:mt-20 sm:pl-24"
-          >
-            <span
-              aria-hidden="true"
-              className="absolute left-[13px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
-            >
-              <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
-            </span>
-            <p className="font-display text-5xl leading-none text-orange/80 sm:text-8xl">02</p>
-            <div className="-mt-3 max-w-3xl -rotate-[0.4deg] rounded-2xl bg-forest p-4 shadow-[4px_5px_0_0_var(--color-orange)] sm:-mt-4 sm:p-9 sm:shadow-[6px_8px_0_0_var(--color-orange)]">
-              <h2 id="project-solution" className="font-sub text-2xl uppercase text-canvas sm:text-3xl">
-                The Solution
-              </h2>
-              <p className={`mt-4 ${proseClasses} !text-canvas/85`}><MobileClamp text={project.solution} /></p>
-              {project.challenges.length > 0 ? (
-                <>
-                  <h3 className="mt-8 font-sub text-lg uppercase text-canvas">
-                    Challenges &amp; decisions
-                  </h3>
-                  <ul className="mt-3 flex flex-col gap-4">
-                    {project.challenges.map((challenge) => (
-                      <li key={challenge.title} className="rounded-xl border border-canvas/20 bg-canvas/10 p-5">
-                        <h4 className="font-semibold text-canvas">{challenge.title}</h4>
-                        <p className="mt-1 text-sm leading-relaxed text-canvas/75">{challenge.body}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : null}
-            </div>
-          </section>
-          {/* ==== Stage 02 � Overview / how it works (white paper card) ==== */}
-          <section
-            id="stage-overview" aria-labelledby="project-overview"
-            data-reveal
-            className="relative mt-10 pl-10 sm:mt-20 sm:pl-24"
-          >
-            <span
-              aria-hidden="true"
-              className="absolute left-[13px] top-2 z-10 flex h-4 w-4 -rotate-45 items-center justify-center bg-orange sm:left-[27px] sm:h-5 sm:w-5"
-            >
-              <span aria-hidden="true" className="h-1.5 w-1.5 bg-canvas sm:h-2 sm:w-2" />
-            </span>
-            <p className="font-display text-4xl leading-none text-forest/15 sm:text-8xl">03</p>
-            <div className="-mt-4 max-w-3xl rotate-[0.4deg] border border-forest/10 bg-surface p-5 shadow-[3px_4px_0_0_var(--color-forest)] sm:p-9 sm:shadow-[5px_7px_0_0_var(--color-forest)]">
-              <h2 id="project-overview" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
-                Overview
-              </h2>
-              <p className={`mt-4 ${proseClasses}`}><MobileClamp text={project.overview} /></p>
+          <ProjectAccordion id="stage-solution" title="The Solution" number="02" dark>
+            <p className={`${proseClasses} !text-canvas/85`}><MobileClamp text={project.solution} /></p>
+            {project.challenges.length > 0 ? (
+              <>
+                <h3 className="mt-8 font-sub text-lg uppercase text-canvas">Challenges &amp; decisions</h3>
+                <ul className="mt-3 flex flex-col gap-4">
+                  {project.challenges.map((challenge) => (
+                    <li key={challenge.title} className="rounded-xl border border-canvas/20 bg-canvas/10 p-5">
+                      <h4 className="font-semibold text-canvas">{challenge.title}</h4>
+                      <p className="mt-1 text-sm leading-relaxed text-canvas/75">{challenge.body}</p>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+          </ProjectAccordion>
 
-              <h3 className="mt-8 font-sub text-lg uppercase text-forest">How it works</h3>
-              <p className={`mt-3 ${proseClasses}`}><MobileClamp text={project.architecture} /></p>
-
-              <h3 className="mt-8 font-sub text-lg uppercase text-forest">Key features</h3>
-              <ul className="mt-3 flex flex-col gap-2">
-                {project.keyFeatures.map((feature) => (
-                  <li key={feature} className="flex items-baseline gap-2 text-base text-forest/85 sm:text-lg">
-                    <span aria-hidden="true" className="text-orange">?</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
+          <ProjectAccordion id="stage-overview" title="Overview" number="03">
+            <p className={proseClasses}><MobileClamp text={project.overview} /></p>
+            <h3 className="mt-8 font-sub text-lg uppercase text-forest">How it works</h3>
+            <p className={`mt-3 ${proseClasses}`}><MobileClamp text={project.architecture} /></p>
+            <h3 className="mt-8 font-sub text-lg uppercase text-forest">Key features</h3>
+            <ul className="mt-3 flex flex-col gap-2">
+              {project.keyFeatures.map((feature) => (
+                <li key={feature} className="flex items-baseline gap-2 text-base text-forest/85 sm:text-lg">
+                  <span aria-hidden="true" className="text-orange">?</span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </ProjectAccordion>
 
 
           {/* ==== Stage 04 — Technologies & Deployment (tool wall) ==== */}
@@ -254,18 +206,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <h2 id="project-tech" className="font-sub text-2xl uppercase text-forest sm:text-3xl">
                 Technologies &amp; Deployment
               </h2>
-              {/* Tool wall: each tech is a stamped plate on the card —
-                  alternating tilt, orange flip on hover, CSS only */}
-              <ul className="mt-6 flex flex-wrap gap-3">
-                {project.technologies.map((tech, i) => (
-                  <li
-                    key={tech}
-                    className={`${i % 2 === 0 ? "-rotate-2" : "rotate-2"} rounded-md border-2 border-forest bg-canvas px-4 py-2 font-display text-sm uppercase tracking-wide text-forest shadow-[3px_3px_0_0_var(--color-orange)] transition-all duration-200 hover:rotate-0 hover:bg-orange hover:text-forest hover:shadow-[3px_3px_0_0_var(--color-forest)]`}
-                  >
-                    {tech}
-                  </li>
-                ))}
-              </ul>
+              <ProjectTechList technologies={project.technologies} />
               <p className="mt-7 text-base leading-relaxed text-forest/85 sm:text-lg">
                 {project.outcomes.join(" ")}
               </p>
