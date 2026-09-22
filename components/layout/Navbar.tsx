@@ -149,11 +149,28 @@ export function Navbar() {
   };
 
   return (
-    <header
-      data-intro="nav"
-      className="fixed inset-x-0 top-2 z-50 flex justify-center px-2 sm:px-4 lg:px-6"
-    >
-      <div className="flex w-full flex-col overflow-hidden rounded-full bg-forest px-4 shadow-lg shadow-forest/30 sm:px-8">
+    <>
+      {/* Fullscreen mobile overlay — covers the whole screen while the menu is
+          open. Fixed sibling of the header (not inside the pill, which stays
+          byte-identical), so the hero behind is fully dimmed instead of
+          bleeding through. Clicking it closes the menu; it never takes focus. */}
+      {menuOpen ? (
+        <div
+          aria-hidden="true"
+          onClick={() => setMenuOpen(false)}
+          className="fixed inset-0 z-40 bg-forest/60 backdrop-blur-sm md:hidden"
+        />
+      ) : null}
+      <header
+        data-intro="nav"
+        className="fixed inset-x-0 top-2 z-50 flex justify-center px-2 sm:px-4 lg:px-6"
+      >
+        <div
+          className={cn(
+            "flex w-full flex-col overflow-hidden bg-forest px-4 shadow-lg shadow-forest/30 sm:px-8",
+            menuOpen ? "rounded-3xl pb-3" : "rounded-full",
+          )}
+        >
         <nav
           aria-label="Primary"
           className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3 sm:gap-6"
@@ -180,6 +197,25 @@ export function Navbar() {
             })}
           </ul>
 
+          {/* Mobile "Book a Call" — far LEFT, small screens only. The same
+              marker CTA as desktop, compact so the closed pill keeps its
+              old size. Hidden once the fullscreen menu opens (the menu has
+              its own full-width CTA), and the desktop pill from the next
+              block takes over from md up. */}
+          <div className="col-start-1 justify-self-start md:hidden">
+            {menuOpen ? null : (
+              <ButtonLink
+                href={siteConfig.links.bookACall}
+                external
+                variant="highlight"
+                compact
+                className="text-sm"
+              >
+                Book a Call
+              </ButtonLink>
+            )}
+          </div>
+
           {/* Book a Call — pinned to the far right, highlighter style */}
           <div className="hidden justify-self-end md:flex">
             <ButtonLink
@@ -191,7 +227,9 @@ export function Navbar() {
             </ButtonLink>
           </div>
 
-          {/* Mobile menu toggle — far right on small screens */}
+          {/* Mobile menu toggle — far right on small screens.
+              Swaps to an X while the menu is open (decorative <svg>s, so the
+              accessible name stays on the button itself). */}
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -200,48 +238,84 @@ export function Navbar() {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             className="col-start-3 inline-flex h-11 w-11 items-center justify-center justify-self-end rounded-md text-canvas transition-colors hover:bg-canvas/10 md:hidden"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              aria-hidden="true"
-            >
-              <line x1="3" y1="5" x2="17" y2="5" />
-              <line x1="3" y1="10" x2="17" y2="10" />
-              <line x1="3" y1="15" x2="17" y2="15" />
-            </svg>
+            {menuOpen ? (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <line x1="4" y1="4" x2="16" y2="16" />
+                <line x1="16" y1="4" x2="4" y2="16" />
+              </svg>
+            ) : (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <line x1="3" y1="5" x2="17" y2="5" />
+                <line x1="3" y1="10" x2="17" y2="10" />
+                <line x1="3" y1="15" x2="17" y2="15" />
+              </svg>
+            )}
           </button>
         </nav>
 
         {menuOpen ? (
+          /* Same pill, expanded: the menu lives INSIDE the container, so the
+             closed pill keeps its exact shape and the open state is one solid
+             card — `rounded-3xl + pb-3` breathing room keeps the bottom edge
+             of the ring visible (no transition: the open state must appear
+             instantly, not morph through a half-open middle shape). */
           <div
             id="mobile-menu"
-            className="mt-2 border-t border-orange/30 bg-forest md:hidden"
+            className="mt-2 rounded-2xl bg-forest p-2 ring-1 ring-canvas/25 md:hidden"
           >
-            <ul className="flex flex-col gap-1 pb-1 pt-3">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={hrefFor(link.href)}
-                    onClick={(event) => {
-                      handleSectionClick(event, link.href);
-                      setMenuOpen(false);
-                    }}
-                    className="block rounded-md px-4 py-3 text-base font-medium text-canvas transition-colors hover:bg-canvas/10 hover:text-orange"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-              <li className="pb-3 pt-1">
+            <ul className="flex flex-col gap-1">
+              {navLinks.map((link) => {
+                const isActive = link.href.slice(1) === activeSection;
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={hrefFor(link.href)}
+                      onClick={(event) => {
+                        handleSectionClick(event, link.href);
+                        setMenuOpen(false);
+                      }}
+                      aria-current={isActive ? "true" : undefined}
+                      className={cn(
+                        "flex items-center gap-3 rounded-2xl px-4 py-3 text-lg font-bold transition-colors hover:bg-canvas/10",
+                        isActive ? "bg-canvas/10 text-orange" : "text-canvas",
+                      )}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          "h-5 w-1 rounded-full",
+                          isActive ? "bg-orange" : "bg-canvas/25",
+                        )}
+                      />
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
+              <li className="px-1 pb-3 pt-2">
                 <ButtonLink
                   href={siteConfig.links.bookACall}
                   external
                   variant="highlight"
+                  compact
                   onClick={() => setMenuOpen(false)}
                   className="w-full"
                 >
@@ -251,7 +325,8 @@ export function Navbar() {
             </ul>
           </div>
         ) : null}
-      </div>
-    </header>
+        </div>
+      </header>
+    </>
   );
 }

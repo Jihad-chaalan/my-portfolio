@@ -25,6 +25,12 @@ interface ButtonLinkProps {
    *  "highlight" = flat pastel-orange highlighter block with chunky poster type. */
   variant?: ButtonVariant;
   className?: string;
+  /**
+   * Compact mode for tight spaces (e.g. the mobile nav menu): shrinks the
+   * highlight variant's poster type from `text-xl sm:text-2xl` to `text-base`.
+   * Other variants are unaffected.
+   */
+  compact?: boolean;
   /** Open in a new tab (used for external links like Book a Call). */
   external?: boolean;
   ariaLabel?: string;
@@ -77,6 +83,7 @@ export function ButtonLink({
   children,
   variant = "primary",
   className,
+  compact = false,
   external = false,
   ariaLabel,
   onClick,
@@ -93,7 +100,10 @@ export function ButtonLink({
         aria-hidden="true"
         className="absolute inset-x-0 top-3 sm:top-2.5 bottom-0 -rotate-1 rounded-[4px] bg-orange transition-colors duration-200 group-hover:bg-canvas"
       />
-      <span className="relative inline-flex items-center gap-1.5 font-display text-xl uppercase leading-none tracking-tight text-surface transition-colors duration-200 group-hover:text-forest sm:text-2xl">
+      <span className={cn(
+        "relative inline-flex items-center gap-1.5 font-display uppercase leading-none tracking-tight text-surface transition-colors duration-200 group-hover:text-forest",
+        compact ? "text-base" : "text-xl sm:text-2xl",
+      )}>
         <span>{children}</span>
         <svg
           aria-hidden="true"
