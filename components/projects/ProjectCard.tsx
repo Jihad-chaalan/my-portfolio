@@ -21,7 +21,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <Link
         href={href}
         aria-label={`View details for ${project.name}`}
-        className="relative block aspect-[16/9] max-h-[42svh] overflow-hidden bg-forest"
+        className="relative block aspect-[16/9] max-h-[30svh] overflow-hidden bg-forest"
       >
         <Image
           src={project.image.src}
@@ -36,8 +36,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </span>
       </Link>
 
-      <div className="flex flex-col gap-4 p-6 sm:p-7">
-        <h3 className="font-sub text-2xl leading-tight text-forest sm:text-3xl">
+      <div className="flex flex-col gap-4 p-6">
+        <h3 className="font-sub text-2xl leading-tight text-forest">
           <Link
             href={href}
             className="transition-colors duration-200 hover:text-orange"
@@ -51,7 +51,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </p>
 
         <ul className="flex flex-col gap-1.5 text-sm text-forest/80" aria-label={`${project.name} key features`}>
-          {project.keyFeatures.slice(0, 3).map((feature) => (
+          {project.keyFeatures.slice(0, 2).map((feature) => (
             <li key={feature} className="flex items-baseline gap-2">
               <span aria-hidden="true" className="text-orange">
                 →

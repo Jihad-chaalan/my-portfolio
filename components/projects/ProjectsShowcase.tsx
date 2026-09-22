@@ -60,10 +60,14 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
 
       /**
        * The stage spot is horizontally centered in the area RIGHT of the
-       * fixed title column — not centered on the whole section (which
-       * would slide cards under the title). The track carries this single
-       * static offset; per-card tweens then translate each card onto the
-       * same spot, which is card 1's natural position.
+       * fixed title column — measured from the title column's right EDGE to
+       * the row's content edge, so the free space is split evenly on both
+       * sides of the card at any viewport width.
+       *
+       * (The previous math measured the region from the track's start —
+       * which includes the title→track gap — and clamped the offset at 0.
+       * On narrow desktops that put the card hard against the title column
+       * with all the slack on the right.)
        */
       const centerTrack = () => {
         const row = track.parentElement;
@@ -74,11 +78,17 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
         const rowStyle = getComputedStyle(row);
         const padRight = parseFloat(rowStyle.paddingRight) || 0;
         const gap = parseFloat(rowStyle.columnGap) || 0;
-        // Region: from the track's natural start to the row's content edge.
-        const regionLeft = leftCol.offsetLeft + leftCol.offsetWidth + gap;
-        const regionWidth = row.offsetWidth - padRight - regionLeft;
+        // Title column's right edge in the row's coordinate space.
+        const titleRight = leftCol.offsetLeft + leftCol.offsetWidth;
+        // Free region the card is centered in: title edge → content edge.
+        const regionWidth = row.offsetWidth - padRight - titleRight;
         const cardWidth = cards[0]?.offsetWidth ?? 0;
-        trackOffset = Math.max(0, (regionWidth - cardWidth) / 2);
+        // The track starts one gap further right than the title edge, so the
+        // offset must hand that gap back to reach the true center.
+        trackOffset = Math.max(
+          0,
+          (regionWidth - cardWidth) / 2 - gap,
+        );
         gsap.set(track, { x: trackOffset });
       };
 
@@ -310,7 +320,7 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
               <div
                 key={project.slug}
                 data-project-card
-                className="w-[min(720px,calc(90vw-13rem-360px))] shrink-0"
+                className="w-[min(640px,calc(90vw-13rem-360px))] shrink-0"
               >
                 <ProjectCard project={project} />
               </div>
