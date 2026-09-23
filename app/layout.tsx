@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Manrope, Shrikhand, Bungee, Archivo_Black } from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { siteConfig } from "@/lib/site";
@@ -105,7 +106,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <Navbar />
         {children}
-
+        <Analytics />
       </body>
     </html>
   );
