@@ -101,10 +101,13 @@ export function ButtonLink({
         className="absolute inset-x-0 top-3 sm:top-2.5 bottom-0 -rotate-1 rounded-[4px] bg-orange transition-colors duration-200 group-hover:bg-canvas"
       />
       <span className={cn(
-        "relative inline-flex items-center gap-1.5 font-display uppercase leading-none tracking-tight text-surface transition-colors duration-200 group-hover:text-forest",
+        "relative inline-flex items-center gap-3 font-display uppercase leading-none tracking-tight text-surface transition-colors duration-200 group-hover:text-forest",
         compact ? "text-base" : "text-xl sm:text-2xl",
       )}>
-        <span>{children}</span>
+        <span className="invisible">{children}</span>
+        <span aria-hidden="true" className="absolute left-1/2 mt-1 -translate-x-1/2 whitespace-nowrap px-2 pr-8">
+          {children}
+        </span>
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
@@ -113,7 +116,20 @@ export function ButtonLink({
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="h-[0.85em] w-[0.85em]"
+          className="h-[0.85em] w-[0.85em] opacity-0"
+        >
+          <path d="M4 12h15" />
+          <path d="m13 6 6 6-6 6" />
+        </svg>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="absolute right-1 top-1/2 h-[0.85em] w-[0.85em] -translate-y-1/2"
         >
           <path d="M4 12h15" />
           <path d="m13 6 6 6-6 6" />
