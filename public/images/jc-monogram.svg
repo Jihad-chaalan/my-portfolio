@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
   <title id="title">JC monogram</title>
   <desc id="desc">Jihad Chaalan initials in a geometric mark</desc>
-  <rect width="64" height="64" rx="16" fill="#fc7d14"/>
+  <rect width="64" height="64" rx="16" fill="#fdf9d0"/>
   <path d="M19 16h14v24.5c0 4.9-3.2 7.5-8.2 7.5-3.6 0-6.3-1.1-8.8-3.4l4.7-5.4c1.2 1.1 2.4 1.7 3.7 1.7 1.3 0 2.1-.8 2.1-2.4V23h-7.5z" fill="#012f25"/>
   <path d="M47 16c-8.2 0-13.5 5.4-13.5 16s5.3 16 13.5 16c4.4 0 7.9-1.7 10.2-4.4l-5.2-4.9c-1.3 1.5-2.8 2.3-4.6 2.3-3.7 0-6-3.1-6-9s2.3-9 6-9c1.8 0 3.3.8 4.6 2.3l5.2-4.9C54.9 17.7 51.4 16 47 16z" fill="#012f25"/>
 </svg>
