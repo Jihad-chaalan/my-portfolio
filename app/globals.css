@@ -6,7 +6,8 @@
  * colors here unless required for accessibility states.
  */
 :root {
-  --color-canvas: #faf2a0; /* Background Yellow */
+  --color-canvas: #fdf9d0; /* Background Yellow */
+  /* --color-canvas: #faf2a0; Background Yellow */
   --color-forest: #012f25; /* Forest Green */
   --color-orange: #fc7d14; /* Orange Accent */
   --color-surface: #ffffff; /* White */
@@ -152,8 +153,7 @@ body {
     0 calc(100% - 10px)
   );
   filter: drop-shadow(
-    0 16px 20px
-      color-mix(in srgb, var(--color-forest) 30%, transparent)
+    0 16px 20px color-mix(in srgb, var(--color-forest) 30%, transparent)
   );
 }
 
@@ -170,4 +170,3 @@ body {
     color-mix(in srgb, var(--color-forest) 12%, transparent) 23px 24px
   );
 }
-
